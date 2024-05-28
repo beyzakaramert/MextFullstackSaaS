@@ -20,6 +20,11 @@ namespace MextFullstackSaaS.Infrastructure.Persistence.Configurations
                 .HasMaxLength(200)
                 .IsRequired();
 
+            // Description
+            builder.Property(x => x.Description)
+                .HasMaxLength(1000)
+                .IsRequired(false);
+
             // ColourCode
             builder.Property(x => x.ColourCode)
                 .HasMaxLength(15)

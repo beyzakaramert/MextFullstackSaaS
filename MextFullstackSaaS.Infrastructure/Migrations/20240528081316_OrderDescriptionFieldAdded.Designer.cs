@@ -9,11 +9,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace MextFullstackSaaS.Infrastructure.Persistence.Migrations.ApplicationDB
+namespace MextFullstackSaaS.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240522113750_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20240528081316_OrderDescriptionFieldAdded")]
+    partial class OrderDescriptionFieldAdded
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -43,6 +43,10 @@ namespace MextFullstackSaaS.Infrastructure.Persistence.Migrations.ApplicationDB
 
                     b.Property<DateTimeOffset>("CreatedOn")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
 
                     b.Property<int>("DesignType")
                         .HasColumnType("integer");
@@ -319,7 +323,7 @@ namespace MextFullstackSaaS.Infrastructure.Persistence.Migrations.ApplicationDB
                         {
                             Id = new Guid("35c16d2a-f25b-4701-9a74-ea1fb7ed6d93"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0229a7ab-9d44-4acc-b015-7e1b055c3c44",
+                            ConcurrencyStamp = "1fe28f33-5e9d-42ff-b293-8c17e188866a",
                             CreatedByUserId = "35c16d2a-f25b-4701-9a74-ea1fb7ed6d93",
                             CreatedOn = new DateTimeOffset(new DateTime(2024, 5, 22, 13, 16, 31, 0, DateTimeKind.Unspecified), new TimeSpan(0, 3, 0, 0, 0)),
                             Email = "mextuser@gmail.com",
@@ -329,7 +333,7 @@ namespace MextFullstackSaaS.Infrastructure.Persistence.Migrations.ApplicationDB
                             LockoutEnabled = false,
                             NormalizedEmail = "MEXTUSER@GMAIL.COM",
                             NormalizedUserName = "MEXTUSER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKoV0wYuyFv39yAVFKji+uShVZxJ+cjbQrMtHWNmlIYe/nbcjryMqvpvZXQv7DAadA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOD8OwRUVinR8bVxnb077Wpk6/Avs3b23pewUbkNl9QuQqNuMjgsDFnV1fhidcDxFQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "6c185769-9f7b-47e8-a70c-dc7b892089de",
                             TwoFactorEnabled = false,

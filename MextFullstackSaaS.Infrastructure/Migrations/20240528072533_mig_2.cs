@@ -4,10 +4,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace MextFullstackSaaS.Infrastructure.Persistence.Migrations.ApplicationDB
+namespace MextFullstackSaaS.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class mig_2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -245,7 +245,7 @@ namespace MextFullstackSaaS.Infrastructure.Persistence.Migrations.ApplicationDB
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CreatedByUserId", "CreatedOn", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "ModifiedByUserId", "ModifiedOn", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { new Guid("35c16d2a-f25b-4701-9a74-ea1fb7ed6d93"), 0, "0229a7ab-9d44-4acc-b015-7e1b055c3c44", "35c16d2a-f25b-4701-9a74-ea1fb7ed6d93", new DateTimeOffset(new DateTime(2024, 5, 22, 13, 16, 31, 0, DateTimeKind.Unspecified), new TimeSpan(0, 3, 0, 0, 0)), "mextuser@gmail.com", true, "Mext", "User", false, null, null, null, "MEXTUSER@GMAIL.COM", "MEXTUSER", "AQAAAAIAAYagAAAAEKoV0wYuyFv39yAVFKji+uShVZxJ+cjbQrMtHWNmlIYe/nbcjryMqvpvZXQv7DAadA==", null, false, "6c185769-9f7b-47e8-a70c-dc7b892089de", false, "mextuser" });
+                values: new object[] { new Guid("35c16d2a-f25b-4701-9a74-ea1fb7ed6d93"), 0, "af0ab31d-e400-44ce-b791-fc81881e400a", "35c16d2a-f25b-4701-9a74-ea1fb7ed6d93", new DateTimeOffset(new DateTime(2024, 5, 22, 13, 16, 31, 0, DateTimeKind.Unspecified), new TimeSpan(0, 3, 0, 0, 0)), "mextuser@gmail.com", true, "Mext", "User", false, null, null, null, "MEXTUSER@GMAIL.COM", "MEXTUSER", "AQAAAAIAAYagAAAAEEXAKchjVdn0aRi26jdR48GaFCTHXHVo6I/KEHHYem2mjlciK5VGfTU+l5poLawSiw==", null, false, "6c185769-9f7b-47e8-a70c-dc7b892089de", false, "mextuser" });
 
             migrationBuilder.InsertData(
                 table: "UserBalances",

@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Resend;
+
 
 
 namespace MextFullstackSaaS.Infrastructure
@@ -38,7 +40,18 @@ namespace MextFullstackSaaS.Infrastructure
 
             services.AddScoped<IJwtService, JwtManager>();
             services.AddScoped<IIdentityService, IdentityManager>();
-          
+
+
+            //Resend
+            services.AddOptions();
+            services.AddHttpClient<ResendClient>();
+            services.Configure<ResendClientOptions>(o =>
+            {
+                o.ApiToken = configuration.GetSection("ReSendApiKey").Value!;
+            });
+            services.AddTransient<IResend, ResendClient>();
+
+
             return services;
         }
     }

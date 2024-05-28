@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using FluentValidation.Validators;
+using MextFullstackSaaS.Application.Common.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +11,12 @@ namespace MextFullstackSaaS.Application.Features.UserAuth.Commands.Register
 {
     public class UserAuthRegisterCommandValidator : AbstractValidator<UserAuthRegisterCommand>
     {
-        public UserAuthRegisterCommandValidator()
+        private readonly IIdentityService _identityService;
+        public UserAuthRegisterCommandValidator(IIdentityService identityService)
         {
+
+            _identityService = identityService;
+
             RuleFor(x => x.Email)
                 .NotEmpty().WithMessage("Email is required")
                 .EmailAddress().WithMessage("Email is not valid");
@@ -28,6 +33,14 @@ namespace MextFullstackSaaS.Application.Features.UserAuth.Commands.Register
 
             RuleFor(x => x.LastName)
                 .NotEmpty().WithMessage("Last name is required");
+
+            RuleFor(x => x.Email)
+                .MustAsync(CheckIfUserExists).WithMessage("User with this email already exists.");
+        }
+
+        private async Task<bool> CheckIfUserExists(string email, CancellationToken cancellationToken)
+        {
+            return !await _identityService.IsEmailExistsAsync(email, cancellationToken);
         }
     }
 }
