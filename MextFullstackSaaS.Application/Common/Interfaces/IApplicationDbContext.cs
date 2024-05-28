@@ -11,6 +11,7 @@ namespace MextFullstackSaaS.Application.Common.Interfaces
         DbSet<UserBalance> UserBalances { get; set; }
 
         DbSet<UserBalanceHistory> UserBalanceHistories { get; set; }
+       
 
         DbSet<User> Users { get; set; }
 
@@ -19,5 +20,8 @@ namespace MextFullstackSaaS.Application.Common.Interfaces
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 
         int SaveChanges();
+
+     
+
     }
 }
