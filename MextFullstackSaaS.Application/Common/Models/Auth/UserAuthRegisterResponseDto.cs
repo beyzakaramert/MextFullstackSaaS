@@ -6,10 +6,17 @@ public class UserAuthRegisterResponseDto
 
     public string Email { get; set; }
 
-    public UserAuthRegisterResponseDto(Guid id, string email)
+    public string FirstName { get; set; }
+
+    public string EmailToken{ get; set; }
+
+    public UserAuthRegisterResponseDto(Guid id, string email, string firstName, string emailToken)
     {
         Id = id;
 
         Email = email;
+
+        FirstName = firstName;
+        EmailToken = emailToken;
     }
 }

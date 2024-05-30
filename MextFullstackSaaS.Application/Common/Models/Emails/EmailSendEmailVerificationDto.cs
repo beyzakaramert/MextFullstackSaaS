@@ -10,7 +10,7 @@
 
         public string Token { get; set; }
 
-        public EmailSendEmailVerificationDto(string email, string subject, string firstName, string token)
+        public EmailSendEmailVerificationDto(string email, string firstName, string token)
         {
             Email = email;          
             FirstName = firstName;
