@@ -1,6 +1,7 @@
 ﻿using MextFullstackSaaS.Application.Common.Interfaces;
 using MextFullstackSaaS.Application.Common.Models;
 using MextFullstackSaaS.Application.Common.Models.Auth;
+using MextFullstackSaaS.Application.Features.UserAuth.Commands.Login;
 using MextFullstackSaaS.Application.Features.UserAuth.Commands.Register;
 using MextFullstackSaaS.Domain.Entities;
 using MextFullstackSaaS.Domain.Identity;
@@ -39,6 +40,13 @@ namespace MextFullstackSaaS.Infrastructure.Services
             throw new NotImplementedException();
         }
 
+        public async Task<JwtDto> LoginAsync(UserAuthLoginCommand command, CancellationToken cancellationToken)
+        {
+            var user = await _userManager.FindByEmailAsync(command.Email);
+
+           var jwtDto = await _jwtService.GenerateTokenAsync(user.Id,user.Email,cancellationToken);
+            return jwtDto;
+        }
         public async Task<bool> IsEmailExistsAsync(string email, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByEmailAsync(email);
@@ -47,6 +55,14 @@ namespace MextFullstackSaaS.Infrastructure.Services
                 return true;
             return false;
         }
-       
+        public async Task<bool> CheckPasswordSignInAsync(string email, string password ,CancellationToken cancellationToken)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user is null) return true;
+            return await _userManager.CheckPasswordAsync(user, password);
+        }
+
+
     }
 }
