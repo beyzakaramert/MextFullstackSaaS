@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Resend;
+using System.Web;
+using MextFullstackSaaS.Domain.Identity;
 
 namespace MextFullstackSaaS.Infrastructure.Services
 {
@@ -19,10 +21,16 @@ namespace MextFullstackSaaS.Infrastructure.Services
             _resend = resend;
         }
 
-        private const string ApiBaseUrl = "http://localhost:5121/api/";
+        private const string ApiBaseUrl = "http://localhost:7281/api/";
         public Task SendEmailVerificationAsync(EmailSendEmailVerificationDto emailDto, CancellationToken cancellationToken)
         {
-            var link = $"{ApiBaseUrl}UsersAuth/VerifyEmail?email={emailDto.Email}&token={emailDto.Token}";
+            var encodedEmail = HttpUtility.UrlEncode(emailDto.Email);
+            var encodedToken = HttpUtility.UrlEncode(emailDto.Token);
+            
+
+            var link = $"{ApiBaseUrl}UsersAuth/verify-email?email={encodedEmail}&token={encodedToken}";
+
+            
 
             var message = new EmailMessage();
             message.From = "onboarding@resend.dev";

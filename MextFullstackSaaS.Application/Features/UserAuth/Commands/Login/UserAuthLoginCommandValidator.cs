@@ -24,11 +24,20 @@ namespace MextFullstackSaaS.Application.Features.UserAuth.Commands.Login
                .MustAsync((x, y, cancellationToken) => CheckPasswordSignInAsync(x.Email, x.Password, cancellationToken))
                .WithMessage("Your email or password is incorrect.Plesase try again");
 
+            RuleFor(x => x.Email)
+                .MustAsync(CheckIfEmailVerifiedAsync)
+                .WithMessage("Email is not verified.Please verify yor email");
+        }
+        private Task<bool> CheckIfEmailVerifiedAsync(string email, CancellationToken cancellationToken)
+        {
+            return _identityService.IsEmailExistsAsync(email, cancellationToken);
         }
 
         private Task<bool> CheckPasswordSignInAsync(string email, string password, CancellationToken cancellationToken)
         {
             return _identityService.CheckPasswordSignInAsync(email, password, cancellationToken);
         }
+
+        
     }
 }

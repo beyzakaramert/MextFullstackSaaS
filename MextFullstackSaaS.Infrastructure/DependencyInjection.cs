@@ -34,9 +34,17 @@ namespace MextFullstackSaaS.Infrastructure
                 options.Password.RequiredLength = 6;
 
                 options.User.RequireUniqueEmail = true;
+
+
+
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.Configure<DataProtectionTokenProviderOptions>(options =>
+            {
+                options.TokenLifespan = TimeSpan.FromHours(3);
+            });
 
             services.AddScoped<IJwtService, JwtManager>();
             services.AddScoped<IIdentityService, IdentityManager>();
