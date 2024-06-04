@@ -11,10 +11,12 @@ namespace MextFullstackSaaS.Application.Features.Orders.Commands.Update
     public class OrderUpdateCommandValidator : AbstractValidator<OrderUpdateCommand>
     {
         private readonly IApplicationDbContext _dbContext;
+        private readonly ICurrentUserService _currentUserService;
 
-        public OrderUpdateCommandValidator(IApplicationDbContext dbContext)
+        public OrderUpdateCommandValidator(IApplicationDbContext dbContext, ICurrentUserService currentUserService)
         {
             _dbContext = dbContext;
+            _currentUserService = currentUserService;
 
             RuleFor(x => x.Id)
                 .NotEmpty()
@@ -53,11 +55,21 @@ namespace MextFullstackSaaS.Application.Features.Orders.Commands.Update
                 .GreaterThan(0)
                 .LessThanOrEqualTo(6)
                 .WithMessage("Please select a valid quantity.");
+
+            RuleFor(x => x.ColourCode)
+                .MustAsync(IsUserIdEqual)
+                .WithMessage("The selected order does not exist in the database");
         }
 
-        public async Task<bool> IsOrderExists(Guid id, CancellationToken cancellationToken)
+       
+
+        public Task<bool> IsOrderExists(Guid id, CancellationToken cancellationToken)
         {
-            return await _dbContext.Orders.AnyAsync(x => x.Id == id, cancellationToken);
+            return _dbContext.Orders.AnyAsync(x => x.Id == id, cancellationToken);
+        }
+        private Task<bool> IsUserIdEqual(string userId, CancellationToken cancellationToken)
+        {
+            return _dbContext.Orders.AnyAsync(x => x.ColourCode == userId, cancellationToken);
         }
     }
 }

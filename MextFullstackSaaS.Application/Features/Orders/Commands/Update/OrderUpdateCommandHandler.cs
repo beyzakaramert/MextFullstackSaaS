@@ -12,26 +12,20 @@ namespace MextFullstackSaaS.Application.Features.Orders.Commands.Update
     public class OrderUpdateCommandHandler : IRequestHandler<OrderUpdateCommand, ResponseDto<Guid>>
     {
         private readonly IApplicationDbContext _dbContext;
+        private readonly ICurrentUserService _currentUserService;
 
-        public OrderUpdateCommandHandler(IApplicationDbContext dbContext)
+        public OrderUpdateCommandHandler(IApplicationDbContext dbContext, ICurrentUserService currentUserService)
         {
             _dbContext = dbContext;
+            _currentUserService = currentUserService;
         }
 
         public async Task<ResponseDto<Guid>> Handle(OrderUpdateCommand request, CancellationToken cancellationToken)
         {
             var order = await _dbContext.Orders.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
-            if (order == null)
-            {
-                return new ResponseDto<Guid>
-                {
-                    Succeeded = false,
-                    Message = "Order not found.",
-                    Data = Guid.Empty
-                };
-            }
 
+            order.ModifiedByUserId = _currentUserService.UserId.ToString();
             order.IconDescription = request.IconDescription;
             order.ColourCode = request.ColourCode;
             order.Model = request.Model;
