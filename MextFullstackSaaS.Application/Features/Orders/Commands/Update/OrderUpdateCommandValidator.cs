@@ -56,20 +56,22 @@ namespace MextFullstackSaaS.Application.Features.Orders.Commands.Update
                 .LessThanOrEqualTo(6)
                 .WithMessage("Please select a valid quantity.");
 
-            RuleFor(x => x.ColourCode)
+            RuleFor(x => x.Id)
                 .MustAsync(IsUserIdEqual)
                 .WithMessage("The selected order does not exist in the database");
         }
 
        
 
-        public Task<bool> IsOrderExists(Guid id, CancellationToken cancellationToken)
+        private Task<bool> IsOrderExists(Guid id, CancellationToken cancellationToken)
         {
             return _dbContext.Orders.AnyAsync(x => x.Id == id, cancellationToken);
         }
-        private Task<bool> IsUserIdEqual(string userId, CancellationToken cancellationToken)
+
+               
+        private Task<bool> IsUserIdEqual(Guid id, CancellationToken cancellationToken)
         {
-            return _dbContext.Orders.AnyAsync(x => x.ColourCode == userId, cancellationToken);
+            return _dbContext.Orders.Where(x => x.Id == id).AnyAsync(x => x.ModifiedByUserId == _currentUserService.UserId.ToString(), cancellationToken);
         }
     }
 }

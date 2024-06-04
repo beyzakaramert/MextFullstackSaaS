@@ -22,28 +22,18 @@ namespace MextFullstackSaaS.Application.Features.Orders.Commands.Update
 
         public async Task<ResponseDto<Guid>> Handle(OrderUpdateCommand request, CancellationToken cancellationToken)
         {
-            var order = await _dbContext.Orders.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+            var oldorder = await _dbContext
+                .Orders
+                .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
+            var updateOrder = OrderUpdateCommand.MapToOrder(request , oldorder!,_currentUserService.UserId);
 
-            order.ModifiedByUserId = _currentUserService.UserId.ToString();
-            order.IconDescription = request.IconDescription;
-            order.ColourCode = request.ColourCode;
-            order.Model = request.Model;
-            order.DesignType = request.DesignType;
-            order.Size = request.Size;
-            order.Shape = request.Shape;
-            order.Quantity = request.Quantity;
-            order.ModifiedOn = DateTimeOffset.UtcNow;
+            _dbContext.Orders.Update(updateOrder);
 
-            _dbContext.Orders.Update(order);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return new ResponseDto<Guid>
-            {
-                Succeeded = true,
-                Message = "Order updated successfully.",
-                Data = order.Id
-            };
+            return new ResponseDto<Guid>(updateOrder.Id, "Order Updated Successfully ");           
+
         }
     }
 }

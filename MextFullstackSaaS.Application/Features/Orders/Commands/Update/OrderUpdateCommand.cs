@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using MextFullstackSaaS.Application.Common.Interfaces;
 using MextFullstackSaaS.Application.Common.Models;
 using MextFullstackSaaS.Domain.Entities;
 using MextFullstackSaaS.Domain.Enums;
@@ -17,6 +18,21 @@ namespace MextFullstackSaaS.Application.Features.Orders.Commands.Update
         public IconShape Shape { get; set; }
         public int Quantity { get; set; }
 
+
+        public static Order MapToOrder(OrderUpdateCommand orderUpdateCommand, Order oldorder, Guid modifiedByUserId)
+        {
+            oldorder.ModifiedByUserId = modifiedByUserId.ToString();
+            oldorder.IconDescription = orderUpdateCommand.IconDescription;
+            oldorder.ColourCode = orderUpdateCommand.ColourCode;
+            oldorder.Model = orderUpdateCommand.Model;
+            oldorder.DesignType = orderUpdateCommand.DesignType;
+            oldorder.Size = orderUpdateCommand.Size;
+            oldorder.Shape = orderUpdateCommand.Shape;
+            oldorder.Quantity = orderUpdateCommand.Quantity;
+            oldorder.ModifiedOn = DateTimeOffset.UtcNow;
+
+            return oldorder;
+        }
         
     }
 }

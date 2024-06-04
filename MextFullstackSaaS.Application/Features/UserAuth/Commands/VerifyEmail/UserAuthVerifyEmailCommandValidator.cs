@@ -1,12 +1,13 @@
 ﻿using FluentValidation;
+using MextFullstackSaaS.Application.Common.FluentValidation.BaseValidators;
 using MextFullstackSaaS.Application.Common.Interfaces;
+using MextFullstackSaaS.Application.Features.UserAuth.Commands.Login;
 
 namespace MextFullstackSaaS.Application.Features.UserAuth.Commands.VerifyEmail
 {
-    public class UserAuthVerifyEmailCommandValidator:AbstractValidator<UserAuthVerifyEmailCommand>
+    public class UserAuthVerifyEmailCommandValidator: UserAuthValidatorBase<UserAuthVerifyEmailCommand>
     {
-        private readonly IIdentityService _identityService;
-        public UserAuthVerifyEmailCommandValidator(IIdentityService identityService)
+        public UserAuthVerifyEmailCommandValidator(IIdentityService identityService) : base(identityService)
         {
 
             RuleFor(p => p.Email)
@@ -17,7 +18,7 @@ namespace MextFullstackSaaS.Application.Features.UserAuth.Commands.VerifyEmail
                 .NotEmpty().WithMessage("{PropertyName} is required.")
                 .MinimumLength(10)
                 .WithMessage("{PropertyName} must be at least 10 characters long.");
-            _identityService = identityService;
+         
 
             RuleFor(p => p.Email)
                 .MustAsync(CheckIfUserExists)
