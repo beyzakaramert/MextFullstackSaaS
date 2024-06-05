@@ -4,15 +4,23 @@ using MextFullstackSaaS.Application.Common.Interfaces;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MextFullstackSaaS.Application.Features.UserAuth.Commands.ForgotPassword
+namespace MextFullstackSaaS.Application.Features.UserAuth.Commands.ResetPassword
 {
-    public class UserAuthForgotPasswordCommandValidator : UserAuthValidatorBase<UserAuthForgotPasswordCommand>
+    public class UserAuthResetPasswordCommandValidator : UserAuthValidatorBase<UserAuthResetPasswordCommand>
     {
-        public UserAuthForgotPasswordCommandValidator(IIdentityService identityService) : base(identityService)
+        public UserAuthResetPasswordCommandValidator(IIdentityService identityService) : base(identityService)
         {
             RuleFor(x => x.Email)
                 .NotEmpty().WithMessage("Email is required.")
                 .EmailAddress().WithMessage("Email is not valid.");
+
+            RuleFor(x => x.Token)
+                .NotEmpty().WithMessage("Token is required.")
+                .MinimumLength(10).WithMessage("Token must be at least 10 characters long.");
+
+            RuleFor(x => x.Password)
+                .NotEmpty().WithMessage("Password is required.")
+                .MinimumLength(6).WithMessage("Password must be at least 6 characters long.");
 
             RuleFor(x => x.Email)
                 .MustAsync(CheckIfUserExists).WithMessage("User with this email does not exist.");

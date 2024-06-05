@@ -1,15 +1,17 @@
 ﻿using MediatR;
 using MextFullstackSaaS.Application.Common.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
-public class UserAuthLoginCommand : IRequest<ResponseDto<JwtDto>>
+namespace MextFullstackSaaS.Application.Features.UserAuth.Commands.ForgotPassword
 {
-    public string Email { get; set; }
-   
-}
+    public class UserAuthForgotPasswordCommand : IRequest<ResponseDto<bool>>
+    {
+      
+        public string Email { get; set; }
 
-   
+        public UserAuthForgotPasswordCommand(string email)
+        {
+            Email = email;
+        }
+    }
+}

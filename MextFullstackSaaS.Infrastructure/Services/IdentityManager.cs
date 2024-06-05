@@ -3,6 +3,7 @@ using MextFullstackSaaS.Application.Common.Models;
 using MextFullstackSaaS.Application.Common.Models.Auth;
 using MextFullstackSaaS.Application.Features.UserAuth.Commands.Login;
 using MextFullstackSaaS.Application.Features.UserAuth.Commands.Register;
+using MextFullstackSaaS.Application.Features.UserAuth.Commands.ResetPassword;
 using MextFullstackSaaS.Application.Features.UserAuth.Commands.VerifyEmail;
 using MextFullstackSaaS.Domain.Entities;
 using MextFullstackSaaS.Domain.Identity;
@@ -85,5 +86,29 @@ namespace MextFullstackSaaS.Infrastructure.Services
         {
            return _userManager.Users.AnyAsync(x => x.Email == email && x.EmailConfirmed, cancellationToken);
         }
+
+        // ForgotPassword metodu
+        public async Task<bool> ForgotPasswordAsync(string email, CancellationToken cancellationToken)
+        {
+            var user = await _userManager.FindByEmailAsync(email);            
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            return true;
+        }
+
+        // ResetPassword metodu
+        public async Task<bool> ResetPasswordAsync(string email, string token, string newPassword, CancellationToken cancellationToken)
+        {
+            var user = await _userManager.FindByEmailAsync(email);          
+            
+            var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
+            if (!result.Succeeded)
+            {
+                throw new Exception("Password reset failed");
+            }
+            return true;
+        }
+                
     }
 }

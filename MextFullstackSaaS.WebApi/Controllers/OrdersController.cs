@@ -1,9 +1,15 @@
 ﻿using MediatR;
+using MextFullstackSaaS.Application.Common.Interfaces;
+using MextFullstackSaaS.Application.Common.Models.Auth;
 using MextFullstackSaaS.Application.Features.Orders.Commands.Add;
 using MextFullstackSaaS.Application.Features.Orders.Commands.Delete;
 using MextFullstackSaaS.Application.Features.Orders.Commands.Update;
 using MextFullstackSaaS.Application.Features.Orders.Queries.GetAll;
 using MextFullstackSaaS.Application.Features.Orders.Queries.GetById;
+using MextFullstackSaaS.Application.Features.UserAuth.Commands.ForgotPassword;
+using MextFullstackSaaS.Application.Features.UserAuth.Commands.ResetPassword;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MextFullstackSaaS.WebApi.Controllers
@@ -38,7 +44,7 @@ namespace MextFullstackSaaS.WebApi.Controllers
         {
             return Ok(await _mediatr.Send(command, cancellationToken));
         }
-        [HttpPut]
+        [HttpPut("{id:guid}")]
         public async Task<IActionResult> UpdateAsync(OrderUpdateCommand command, CancellationToken cancellationToken)
         {
             return Ok(await _mediatr.Send(command, cancellationToken));
@@ -49,5 +55,20 @@ namespace MextFullstackSaaS.WebApi.Controllers
         {
             return Ok(await _mediatr.Send(new OrderGetAllQuery(), cancellationToken));
         }
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword(string email, CancellationToken cancellationToken)
+        {
+            await _mediatr.Send(new UserAuthForgotPasswordCommand(email), cancellationToken);
+            return Ok("Password reset link has been sent to your email.");
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword(string email, string token, string password , string newPassword, CancellationToken cancellationToken)
+        {
+            await _mediatr.Send(new UserAuthResetPasswordCommand(email, token, password, newPassword), cancellationToken);
+            return Ok("Password has been reset successfully.");
+        }
+
+
     }
 }

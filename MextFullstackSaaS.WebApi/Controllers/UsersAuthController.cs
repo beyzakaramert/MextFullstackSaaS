@@ -1,6 +1,8 @@
 ﻿using MediatR;
+using MextFullstackSaaS.Application.Features.UserAuth.Commands.ForgotPassword;
 using MextFullstackSaaS.Application.Features.UserAuth.Commands.Login;
 using MextFullstackSaaS.Application.Features.UserAuth.Commands.Register;
+using MextFullstackSaaS.Application.Features.UserAuth.Commands.ResetPassword;
 using MextFullstackSaaS.Application.Features.UserAuth.Commands.VerifyEmail;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,6 +36,18 @@ public class UsersAuthController : ControllerBase
     public async Task<IActionResult> VerifyEmailAsync([FromQuery]UserAuthVerifyEmailCommand command, CancellationToken cancellationToken)
     {
         //throw new ArgumentNullException(command.FirstName, "First name is required");
+        return Ok(await _mediatr.Send(command, cancellationToken));
+    }
+
+    [HttpPost("forgot-password")]
+    public async Task<IActionResult> ForgotPasswordAsync(UserAuthForgotPasswordCommand command, CancellationToken cancellationToken)
+    {
+        return Ok(await _mediatr.Send(command, cancellationToken));
+    }
+
+    [HttpPost("reset-password")]
+    public async Task<IActionResult> ResetPasswordAsync(UserAuthResetPasswordCommand command, CancellationToken cancellationToken)
+    {
         return Ok(await _mediatr.Send(command, cancellationToken));
     }
 }
