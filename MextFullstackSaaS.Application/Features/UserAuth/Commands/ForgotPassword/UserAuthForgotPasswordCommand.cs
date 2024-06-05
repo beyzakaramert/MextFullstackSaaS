@@ -13,5 +13,10 @@ namespace MextFullstackSaaS.Application.Features.UserAuth.Commands.ForgotPasswor
         {
             Email = email;
         }
+
+        public UserAuthForgotPasswordCommand()
+        {
+            
+        }
     }
 }

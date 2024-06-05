@@ -40,13 +40,13 @@ public class UsersAuthController : ControllerBase
     }
 
     [HttpGet("forgot-password")]
-    public async Task<IActionResult> ForgotPasswordAsync(UserAuthForgotPasswordCommand command, CancellationToken cancellationToken)
+    public async Task<IActionResult> ForgotPasswordAsync([FromQuery] UserAuthForgotPasswordCommand command, CancellationToken cancellationToken)
     {
         return Ok(await _mediatr.Send(command, cancellationToken));
     }
 
     [HttpGet("reset-password")]
-    public async Task<IActionResult> ResetPasswordAsync(UserAuthResetPasswordCommand command, CancellationToken cancellationToken)
+    public async Task<IActionResult> ResetPasswordAsync([FromQuery] UserAuthResetPasswordCommand command, CancellationToken cancellationToken)
     {
         return Ok(await _mediatr.Send(command, cancellationToken));
     }

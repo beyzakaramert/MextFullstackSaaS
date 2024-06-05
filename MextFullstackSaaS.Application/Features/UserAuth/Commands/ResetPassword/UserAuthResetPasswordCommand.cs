@@ -11,18 +11,19 @@ namespace MextFullstackSaaS.Application.Features.UserAuth.Commands.ResetPassword
 
         public string Password { get; set; }
 
-        public string NewPassword { get; set; }
-
         public string Email { get; set; }
 
-        public UserAuthResetPasswordCommand(string email ,string token, string password, string newPassword)
+        public UserAuthResetPasswordCommand(string email ,string token, string password)
         {
             Token = token;
             Password = password;
-            NewPassword = newPassword;
+           
             Email = email;
         }
 
-        
+        public UserAuthResetPasswordCommand()
+        {
+        }
+
     }
 }

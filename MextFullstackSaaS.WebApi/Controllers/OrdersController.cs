@@ -58,15 +58,13 @@ namespace MextFullstackSaaS.WebApi.Controllers
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword(string email, CancellationToken cancellationToken)
         {
-            await _mediatr.Send(new UserAuthForgotPasswordCommand(email), cancellationToken);
-            return Ok("Password reset link has been sent to your email.");
+            return Ok(await _mediatr.Send(new UserAuthForgotPasswordCommand(email), cancellationToken));
         }
 
         [HttpPost("reset-password")]
-        public async Task<IActionResult> ResetPassword(string email, string token, string password , string newPassword, CancellationToken cancellationToken)
+        public async Task<IActionResult> ResetPassword(string email, string token, string password , CancellationToken cancellationToken)
         {
-            await _mediatr.Send(new UserAuthResetPasswordCommand(email, token, password, newPassword), cancellationToken);
-            return Ok("Password has been reset successfully.");
+            return Ok(await _mediatr.Send(new UserAuthResetPasswordCommand(email, token, password), cancellationToken));
         }
 
 
