@@ -12,14 +12,43 @@
 
         public EmailSendEmailVerificationDto(string email, string firstName, string token)
         {
-            Email = email;          
+            Email = email;
             FirstName = firstName;
             Token = token;
         }
 
-        public EmailSendEmailVerificationDto() 
-        { 
-        
+        public EmailSendEmailVerificationDto()
+        {
+
+        }
+    }
+    public class EmailSendForgotPasswordDto
+    {
+        public string Email { get; set; }
+        public string Token { get; set; }
+
+        public EmailSendForgotPasswordDto(string email, string token)
+        {
+            Email = email;
+            Token = token;
+        }
+
+        public EmailSendForgotPasswordDto()
+        {
+        }
+    }
+
+    public class EmailSendResetPasswordConfirmationDto
+    {
+        public string Email { get; set; }
+
+        public EmailSendResetPasswordConfirmationDto(string email)
+        {
+            Email = email;
+        }
+
+        public EmailSendResetPasswordConfirmationDto()
+        {
         }
     }
 }

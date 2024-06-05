@@ -34,7 +34,7 @@
             Data = default;
         }
 
-        public ResponseDto(bool v)
+        public ResponseDto()
         {
             Errors = new ();
         }

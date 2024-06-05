@@ -88,13 +88,13 @@ namespace MextFullstackSaaS.Infrastructure.Services
         }
 
         // ForgotPassword metodu
-        public async Task<bool> ForgotPasswordAsync(string email, CancellationToken cancellationToken)
+        public async Task<string> ForgotPasswordAsync(string email, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByEmailAsync(email);            
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-            return true;
+            return token;
         }
 
         // ResetPassword metodu
