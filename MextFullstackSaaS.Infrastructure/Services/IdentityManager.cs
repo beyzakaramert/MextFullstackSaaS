@@ -10,6 +10,7 @@ using MextFullstackSaaS.Domain.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
+using System.Web;
 
 namespace MextFullstackSaaS.Infrastructure.Services
 {
@@ -100,9 +101,11 @@ namespace MextFullstackSaaS.Infrastructure.Services
         // ResetPassword metodu
         public async Task<bool> ResetPasswordAsync(string email, string token, string newPassword, CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByEmailAsync(email);          
-            
-            var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
+            var user = await _userManager.FindByEmailAsync(email);
+
+            var decodedToken = HttpUtility.UrlDecode(token);
+
+            var result = await _userManager.ResetPasswordAsync(user, decodedToken, newPassword);
             if (!result.Succeeded)
             {
                 throw new Exception("Password reset failed");
