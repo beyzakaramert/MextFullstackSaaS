@@ -26,7 +26,7 @@ namespace MextFullstackSaaS.Infrastructure.Services
         {
             var imageResult = await _openAiService.Image.CreateImage(new ImageCreateRequest
             {
-                Prompt = "Laser cat eyes",
+                Prompt = CreateIconPrompt(requestDto),
                 N = requestDto.Quantity,
                 Size = GetSize(requestDto.Size),
                 ResponseFormat = StaticValues.ImageStatics.ResponseFormat.Url,
@@ -48,6 +48,18 @@ namespace MextFullstackSaaS.Infrastructure.Services
                 IconSize.Large => StaticValues.ImageStatics.Size.Size1024,
                 _ => StaticValues.ImageStatics.Size.Size256,
             };
+        }
+
+        private string CreateIconPrompt(DallECreateIconRequestDto request)
+        {
+            return $"Generate icon with the following specifications:\n" +
+                   $"- **Description:** {request.Description}\n" +
+                   $"- **Colour:** {request.ColourCode}\n" +
+                   $"- **Model:** {request.Model}\n" +
+                   $"- **Design Type:** {request.DesignType}\n" +
+                   $"- **Size:** {request.Size}\n" +
+                   $"- **Shape:** {request.Shape}\n\n" +
+                   "Please ensure the icon adhere to the specified design type and are visually appealing.";
         }
     }
 }
