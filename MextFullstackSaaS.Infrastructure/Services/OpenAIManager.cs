@@ -11,13 +11,14 @@ using MextFullstackSaaS.Domain.Enums;
 
 namespace MextFullstackSaaS.Infrastructure.Services
 {
-    public class OpenAIManager :IOpenAIService
+    public class OpenAIManager : IOpenAIService
     {
         private readonly ICurrentUserService _currentUserService;
         private readonly OpenAI.Interfaces.IOpenAIService _openAiService;
 
-        public OpenAIManager(OpenAI.Interfaces.IOpenAIService openAiService, ICurrentUserService currentUserService) { 
-        
+        public OpenAIManager(OpenAI.Interfaces.IOpenAIService openAiService, ICurrentUserService currentUserService)
+        {
+
             _openAiService = openAiService;
             _currentUserService = currentUserService;
         }
@@ -27,12 +28,18 @@ namespace MextFullstackSaaS.Infrastructure.Services
             var imageResult = await _openAiService.Image.CreateImage(new ImageCreateRequest
             {
                 Prompt = CreateIconPrompt(requestDto),
-                N = requestDto.Quantity,
+                N = requestDto.Model == AIModelType.DallE3 ? 1 : requestDto.Quantity,
                 Size = GetSize(requestDto.Size),
                 ResponseFormat = StaticValues.ImageStatics.ResponseFormat.Url,
+                User = _currentUserService.UserId.ToString(),
+                Model = Models.Dall_e_3
+            }, cancellationToken);//Task<ImageCreateResponse> 
 
-                User = _currentUserService.UserId.ToString()
-            },cancellationToken);//Task<ImageCreateResponse> 
+            // TODO: Add error handling / If the model is Dall-e-3, Image size must be at least 1024x1024
+            if (!imageResult.Successful)
+            {
+
+            }
 
             return imageResult
                 .Results
@@ -52,14 +59,18 @@ namespace MextFullstackSaaS.Infrastructure.Services
 
         private string CreateIconPrompt(DallECreateIconRequestDto request)
         {
-            return $"Generate icon with the following specifications:\n" +
-                   $"- **Description:** {request.Description}\n" +
-                   $"- **Colour:** {request.ColourCode}\n" +
-                   $"- **Model:** {request.Model}\n" +
-                   $"- **Design Type:** {request.DesignType}\n" +
-                   $"- **Size:** {request.Size}\n" +
-                   $"- **Shape:** {request.Shape}\n\n" +
-                   "Please ensure the icon adhere to the specified design type and are visually appealing.";
+            var promptBuilder = new StringBuilder();
+
+            promptBuilder.Append(
+                $"You're a World-class Icon Designer AI who is working on Mobile Application Icons. Generate icon with the following specifications: ");
+
+            promptBuilder.Append(
+                $"Design Type: {request.DesignType}, Colour Code (Hex Code): {request.ColourCode}, Shape: {request.Shape}, Description:{request.Description} ");
+
+            promptBuilder.Append(
+                $"I'll tip you 1000$ for your work, if I like it.");
+
+            return promptBuilder.ToString();
         }
     }
 }
