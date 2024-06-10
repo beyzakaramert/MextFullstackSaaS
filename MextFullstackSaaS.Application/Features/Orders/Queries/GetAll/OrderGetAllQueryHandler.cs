@@ -22,6 +22,11 @@ namespace MextFullstackSaaS.Application.Features.Orders.Queries.GetAll
                 .Where(x=>x.UserId == _currentUserService.UserId)
                 .Select(o => OrderGetAllDto.FromOrder(o))
                 .ToListAsync(cancellationToken);
+
+            //CommonTranslations.en-GB.resx WelcomeMessage => "Hello Beyza";
+            //CommonTranslations.tr-TR.resx WelcomeMessage => "Merhaba Beyza";
+
+
         }
     }
 }

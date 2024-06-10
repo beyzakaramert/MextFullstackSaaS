@@ -1,8 +1,11 @@
 ﻿using MextFullstackSaaS.Application.Common.Interfaces;
 using MextFullstackSaaS.WebApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Globalization;
+using System.Security.Cryptography.Xml;
 using System.Text;
 
 namespace MextFullstackSaaS.WebApi
@@ -11,6 +14,32 @@ namespace MextFullstackSaaS.WebApi
     {
         public static IServiceCollection AddWebServices(this IServiceCollection services, IConfiguration configuration)
         {
+
+            services.AddLocalization(options =>
+            {
+                options.ResourcesPath = "Resources";
+            });
+
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var defaultCulture = new CultureInfo("en-GB");
+
+                var supportedCulture = new List<CultureInfo>
+                {
+                    defaultCulture,
+                    new CultureInfo("tr-TR")
+                };
+
+                options.DefaultRequestCulture = new RequestCulture(defaultCulture);
+
+                options.SupportedCultures = supportedCulture;
+
+                options.SupportedUICultures = supportedCulture;
+
+                options.ApplyCurrentCultureToResponseHeaders = true;
+                
+            });
+
             services.AddEndpointsApiExplorer();
 
             services.AddSwaggerGen(setupAction =>

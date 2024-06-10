@@ -6,6 +6,7 @@ using MextFullstackSaaS.WebApi.Filters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -48,6 +49,10 @@ try
         app.UseSwagger();
         app.UseSwaggerUI();
     }
+
+    var requestLocalizationOptions = app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>();
+
+    app.UseRequestLocalization(requestLocalizationOptions.Value);
 
     app.UseHttpsRedirection();
 
