@@ -14,15 +14,18 @@ namespace MextFullstackSaaS.Infrastructure.Services
 {
     public class ResendEmailManager : IEmailService
     {
-        private readonly IResend _resend;
 
-        public ResendEmailManager(IResend resend)
+        private readonly IResend _resend;
+        private readonly IRootPathService _rootPathService;
+
+        public ResendEmailManager(IResend resend, IRootPathService rootPathService)
         {
             _resend = resend;
+            _rootPathService = rootPathService;
         }
 
         private const string ApiBaseUrl = "https://localhost:7281/api/";
-        public Task SendEmailVerificationAsync(EmailSendEmailVerificationDto emailDto, CancellationToken cancellationToken)
+        public async Task SendEmailVerificationAsync(EmailSendEmailVerificationDto emailDto, CancellationToken cancellationToken)
         {
             var encodedEmail = HttpUtility.UrlEncode(emailDto.Email);
             var encodedToken = HttpUtility.UrlEncode(emailDto.Token);
@@ -30,18 +33,36 @@ namespace MextFullstackSaaS.Infrastructure.Services
 
             var link = $"{ApiBaseUrl}UsersAuth/verify-email?email={encodedEmail}&token={encodedToken}";
 
-            
+            var htmlContent =
+                await File.ReadAllTextAsync($"{_rootPathService.GetRootPath()}/email-templates/userauth-template.html", cancellationToken);
 
-            var message = new EmailMessage();
-            message.From = "onboarding@resend.dev";
-            message.To.Add(emailDto.Email);
-            message.Subject = "Email Verification | IconBuilderAI";
-            message.HtmlBody = $"<div><a href=\"{link}\" target=\"_blank\"><strong>Greetings<strong> 👋🏻 from .NET</a></div>";
+            htmlContent = htmlContent.Replace("{{{link}}}", link);
 
-            return _resend.EmailSendAsync(message,cancellationToken);
+            htmlContent = htmlContent.Replace("{{{subject}}}","Email Verification");
+
+            htmlContent = htmlContent.Replace("{{{content}}}","Kindly click the button below to confirm your email address.");
+
+            htmlContent = htmlContent.Replace("{{{buttonText}}}","Verify email");
+
+            await SendEmailAsync(new EmailSendDto(emailDto.Email, "Email Verification", htmlContent), cancellationToken);
         }
 
-        public Task SendForgotPasswordEmailAsync(EmailSendForgotPasswordDto emailDto, CancellationToken cancellationToken)
+        private Task SendEmailAsync(EmailSendDto emailSendDto, CancellationToken cancellationToken)
+        {
+            var message = new EmailMessage();
+
+            message.From = "noreply@yazilim.academy";
+
+            foreach (var emailAddress in emailSendDto.Addresses)
+                message.To.Add(emailAddress);
+
+            message.Subject = emailSendDto.Subject;
+            message.HtmlBody = emailSendDto.HtmlContent;
+
+            return _resend.EmailSendAsync(message, cancellationToken);
+        }
+
+        public async Task SendForgotPasswordEmailAsync(EmailSendForgotPasswordDto emailDto, CancellationToken cancellationToken)
         {
             var encodedEmail = HttpUtility.UrlEncode(emailDto.Email);
             var encodedToken = HttpUtility.UrlEncode(emailDto.Token);
@@ -54,10 +75,10 @@ namespace MextFullstackSaaS.Infrastructure.Services
             message.Subject = "Password Reset Request | IconBuilderAI";
             message.HtmlBody = $"<div><a href=\"{link}\" target=\"_blank\"><strong>Click here to reset your password</strong></a></div>";
 
-            return _resend.EmailSendAsync(message, cancellationToken);
+            await _resend.EmailSendAsync(message, cancellationToken);
         }
 
-        public Task SendResetPasswordConfirmationAsync(EmailSendResetPasswordConfirmationDto emailDto, CancellationToken cancellationToken)
+        public async Task SendResetPasswordConfirmationAsync(EmailSendResetPasswordConfirmationDto emailDto, CancellationToken cancellationToken)
         {
             var message = new EmailMessage();
             message.From = "support@resend.dev";
@@ -65,7 +86,7 @@ namespace MextFullstackSaaS.Infrastructure.Services
             message.Subject = "Password Reset Confirmation | IconBuilderAI";
             message.HtmlBody = $"<div><strong>Your password has been successfully reset.</strong></div>";
 
-            return _resend.EmailSendAsync(message, cancellationToken);
+            await _resend.EmailSendAsync(message, cancellationToken);
         }
 
     }
