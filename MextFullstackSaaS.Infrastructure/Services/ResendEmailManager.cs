@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using Resend;
 using System.Web;
 using MextFullstackSaaS.Domain.Identity;
+using MextFullstackSaaS.Application.Common.Translations;
+using Microsoft.Extensions.Localization;
 
 namespace MextFullstackSaaS.Infrastructure.Services
 {
@@ -17,11 +19,13 @@ namespace MextFullstackSaaS.Infrastructure.Services
 
         private readonly IResend _resend;
         private readonly IRootPathService _rootPathService;
+        private readonly IStringLocalizer<CommonTranslations> _localizer;
 
-        public ResendEmailManager(IResend resend, IRootPathService rootPathService)
+        public ResendEmailManager(IResend resend, IRootPathService rootPathService, IStringLocalizer<CommonTranslations> localizer)
         {
             _resend = resend;
             _rootPathService = rootPathService;
+            _localizer = localizer;
         }
 
         private const string ApiBaseUrl = "https://localhost:7281/api/";
@@ -38,13 +42,13 @@ namespace MextFullstackSaaS.Infrastructure.Services
 
             htmlContent = htmlContent.Replace("{{{link}}}", link);
 
-            htmlContent = htmlContent.Replace("{{{subject}}}","Email Verification");
+            htmlContent = htmlContent.Replace("{{{subject}}}", _localizer[CommonTranslationKeys.EmailVerificationSubject]);
 
-            htmlContent = htmlContent.Replace("{{{content}}}","Kindly click the button below to confirm your email address.");
+            htmlContent = htmlContent.Replace("{{{content}}}", _localizer[CommonTranslationKeys.EmailVerificationContent]);
 
-            htmlContent = htmlContent.Replace("{{{buttonText}}}","Verify email");
+            htmlContent = htmlContent.Replace("{{{buttonText}}}", _localizer[CommonTranslationKeys.EmailVerificationButtonText]);
 
-            await SendEmailAsync(new EmailSendDto(emailDto.Email, "Email Verification", htmlContent), cancellationToken);
+            await SendEmailAsync(new EmailSendDto(emailDto.Email, _localizer[CommonTranslationKeys.EmailVerificationSubject], htmlContent), cancellationToken);
         }
 
         private Task SendEmailAsync(EmailSendDto emailSendDto, CancellationToken cancellationToken)
@@ -67,16 +71,18 @@ namespace MextFullstackSaaS.Infrastructure.Services
             var encodedEmail = HttpUtility.UrlEncode(emailDto.Email);
             var encodedToken = HttpUtility.UrlEncode(emailDto.Token);
 
-            var link = $"{ApiBaseUrl}UsersAuth/reset-password?email={encodedEmail}&token={encodedToken}";
+            var link = $"{ApiBaseUrl}UsersAuth/verify-email?email={encodedEmail}&token={encodedToken}";
 
-            var message = new EmailMessage();
-            message.From = "support@resend.dev";
-            message.To.Add(emailDto.Email);
-            message.Subject = "Password Reset Request | IconBuilderAI";
-            message.HtmlBody = $"<div><a href=\"{link}\" target=\"_blank\"><strong>Click here to reset your password</strong></a></div>";
+            var htmlContent = await File.ReadAllTextAsync($"{_rootPathService.GetRootPath()}/email-templates/userauth-template.html", cancellationToken);
 
-            await _resend.EmailSendAsync(message, cancellationToken);
+            htmlContent = htmlContent.Replace("{{{link}}}", link);
+            htmlContent = htmlContent.Replace("{{{subject}}}", "Forgot Password");
+            htmlContent = htmlContent.Replace("{{{content}}}", "Kindly click the button below to reset your password.");
+            htmlContent = htmlContent.Replace("{{{buttonText}}}", "Reset Password");
+
+            await SendEmailAsync(new EmailSendDto(emailDto.Email, "Forgot Password", htmlContent), cancellationToken);
         }
+
 
         public async Task SendResetPasswordConfirmationAsync(EmailSendResetPasswordConfirmationDto emailDto, CancellationToken cancellationToken)
         {
@@ -87,7 +93,6 @@ namespace MextFullstackSaaS.Infrastructure.Services
             message.HtmlBody = $"<div><strong>Your password has been successfully reset.</strong></div>";
 
             await _resend.EmailSendAsync(message, cancellationToken);
-        }
-
+        }      
     }
 }

@@ -136,4 +136,10 @@
     <value>{0} e-posta adresiniz başarıyla doğrulanmıştır.</value>
     <comment>{0} e-posta adresiniz basariyla dogrulanmistir.</comment>
   </data>
+  <data name="EmailVerificationSubject" xml:space="preserve">
+    <value>E-Posta Dogrulama</value>
+  </data>
+  <data name="EmailVerificationContent" xml:space="preserve">
+    <value>Lütfen e-posta adresinizi onaylamak için butona tıklayınız</value>
+  </data>
 </root>

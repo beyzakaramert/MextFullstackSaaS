@@ -136,4 +136,10 @@
     <value>Your {0} e-mail address verified successfully.</value>
     <comment>Your {0} e-mail address verified successfully.</comment>
   </data>
+  <data name="EmailVerificationSubject" xml:space="preserve">
+    <value>Email Verification</value>
+  </data>
+  <data name="EmailVerificationContent" xml:space="preserve">
+    <value>Kindly click the button below to confirm your email address.</value>
+  </data>
 </root>
