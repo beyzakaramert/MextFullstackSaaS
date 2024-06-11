@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MextFullstackSaaS.Infrastru
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MextFullstackSaaS.WebApi", "MextFullstackSaaS.WebApi\MextFullstackSaaS.WebApi.csproj", "{94900933-590D-4876-9A12-57F50A37DC4B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MextFullStackSaaS.WasmClient", "MextFullStackSaaS.WasmClient\MextFullStackSaaS.WasmClient.csproj", "{4DDB098D-76C2-4D40-B269-3103E2C98506}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MextFullStackSaaS.WasmClient", "MextFullStackSaaS.WasmClient\MextFullStackSaaS.WasmClient.csproj", "{4DDB098D-76C2-4D40-B269-3103E2C98506}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
