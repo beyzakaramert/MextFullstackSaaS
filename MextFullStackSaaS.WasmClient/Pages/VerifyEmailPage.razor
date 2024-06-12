@@ -1,0 +1,17 @@
+﻿@page "/verify-email"
+<h3 class="text-red-500">@Email</h3>
+<h3 class="mt-1 text-indigo-500">@Token</h3>
+
+@code {
+    [SupplyParameterFromQuery]
+    [Parameter]
+    public string Email { get; set; }
+
+    [SupplyParameterFromQuery]
+    [Parameter]
+    public string Token { get; set; }
+
+    //verify-email?email=altudev02%40gmail.com&token=CfDJ8A%2fTUAbrJ1RJsrx5cypvDJSY05e4h8pdcsF7kdhedYYJWEXQsCjjyxl9fv2BCRrcw4zZXv0Exl6nlFbyvRw28%2b8zeyokBtCrYHPLDAmNi8a2jjp1sgZH1nEkP9NGupW%2bt7%2f3GAtXl1nWWmOslAuTV7dZFlCaL5sumqV5tD2ewiAJyLFHO3Xp5WA%2fmMjWPqyNu4ZqnPg7srBzJFOl019dUcobylyrO2f7q8A4qBFK2V6oDd6uFwuy4S%2frtoQv32WDRQ%3d%3d
+
+    public bool IsLoading = true;
+}
