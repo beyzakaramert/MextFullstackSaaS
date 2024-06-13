@@ -1,0 +1,35 @@
+﻿@using MextFullstackSaaS.Application.Common.Models
+
+
+<div class="container mx-auto mt-4">
+    @if (Errors != null && Errors.Count > 0)
+    {
+        <div class="alert alert-error shadow-lg">
+            <div class="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 h-6 w-6 stroke-current" fill="none" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-1.414-1.414L12 8.172 7.05 3.222 5.636 4.636 10.586 9.586 5.636 14.536l1.414 1.414L12 11.828l4.95 4.95 1.414-1.414-4.95-4.95 4.95-4.95z" />
+                </svg>
+                <span class="ml-2">There are errors in your submission:</span>
+            </div>
+            <ul class="ml-4 mt-2 list-inside list-disc">
+                @foreach (var error in Errors)
+                {
+                    <li>
+                        <strong>@error.PropertyName:</strong>
+                        <ul class="ml-4">
+                            @foreach (var message in error.Messages)
+                            {
+                                <li>@message</li>
+                            }
+                        </ul>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public List<ErrorDto> Errors { get; set; } = new List<ErrorDto>();
+}

@@ -2,9 +2,9 @@
 @using Blazored.LocalStorage
 @using MextFullstackSaaS.Application.Common.Models
 @using MextFullstackSaaS.Application.Features.UserAuth.Commands.Login
-@using MextFullstackSaaS.Application.Features.UserAuth.Commands.Register
 @using MextFullStackSaaS.WasmClient.Services
 @using Microsoft.AspNetCore.Components.Authorization
+@using System.Net
 @inject HttpClient HttpClient
 @inject IToasterService ToasterService
 @inject ILocalStorageService LocalStorage
@@ -29,6 +29,7 @@
                     <EditForm Model="@command" OnSubmit="HandleSubmit" FormName="loginform">
                         <DataAnnotationsValidator />
                         <ValidationSummary class="mb-1 text-red-500" />
+                        <ErrorList Errors="errors"/>
                         <div class="space-y-5">
                             @* Email input *@
                             <div>
@@ -112,6 +113,7 @@
     // Login model to bind form data
     private UserAuthLoginCommand command = new();
     private bool isLoading = false;
+    private List<ErrorDto> errors = new();
 
     // Handle form submission
     private async Task HandleSubmit()
@@ -136,6 +138,15 @@
             }
             else
             {
+                if (response.StatusCode == HttpStatusCode.BadRequest)
+                {
+                    var responseDto = await response.Content.ReadFromJsonAsAsync<ResponseDto<JwtDto>>();
+
+                    errors = response.Errors;
+
+                    ToasterService.ShowWarning(responseDto.Message);
+                }
+
                 ToasterService.ShowError($"Beklenmedik bir hata olustu. Response Code:{response.StatusCode}");
             }
 

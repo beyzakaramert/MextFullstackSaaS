@@ -26,14 +26,15 @@ namespace MextFullstackSaaS.WasmClient
             {
                 var claims = JwtHelper
                     .ReadClaimsFromToken(jwtDto.Token)
-                    .Append(new Claim("Token", jwtDto.Token));
-
+                    .Append(new Claim("Token", jwtDto.Token))
+                    .Append(new Claim("Name", jwtDto.Token));
 
                 var identity = new ClaimsIdentity(claims, "jwt");
 
                 var user = new ClaimsPrincipal(identity);
 
                 var state = new AuthenticationState(user);
+
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtDto.Token);
 
                 NotifyAuthenticationStateChanged(Task.FromResult(state));
