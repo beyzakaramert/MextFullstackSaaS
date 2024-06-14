@@ -2,6 +2,7 @@
 using MextFullstackSaaS.Application.Common.Interfaces;
 using MextFullstackSaaS.Application.Common.Models.Auth;
 using MextFullstackSaaS.Application.Features.Orders.Commands.Add;
+using MextFullstackSaaS.Application.Features.Orders.Commands.AddRange;
 using MextFullstackSaaS.Application.Features.Orders.Commands.Delete;
 using MextFullstackSaaS.Application.Features.Orders.Commands.Update;
 using MextFullstackSaaS.Application.Features.Orders.Queries.GetAll;
@@ -40,12 +41,19 @@ namespace MextFullstackSaaS.WebApi.Controllers
             return Ok(await _mediatr.Send(new OrderDeleteCommand(id), cancellationToken));
         }
 
-
         [HttpPost]
-        public async Task<IActionResult> AddAsync(OrderAddCommand command,CancellationToken cancellationToken)
+        public async Task<IActionResult> AddAsync(OrderAddCommand command, CancellationToken cancellationToken)
         {
             return Ok(await _mediatr.Send(command, cancellationToken));
         }
+
+        [HttpPost("AddRange")]
+        public async Task<IActionResult> AddRangeAsync(OrderAddRangeCommand command,CancellationToken cancellationToken)
+        {
+            return Ok(await _mediatr.Send(command, cancellationToken));
+        }
+
+
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> UpdateAsync(OrderUpdateCommand command, CancellationToken cancellationToken)
         {
