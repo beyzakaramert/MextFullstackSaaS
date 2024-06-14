@@ -50,7 +50,7 @@ namespace MextFullstackSaaS.WasmClient
 
             NotifyAuthenticationStateChanged(Task.FromResult(anonymusState));
 
-            return new AuthenticationState(anonymous);
+            return anonymusState;
         }
     }
 }
