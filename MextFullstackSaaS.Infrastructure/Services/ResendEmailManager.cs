@@ -1,16 +1,9 @@
 ﻿using MextFullstackSaaS.Application.Common.Interfaces;
 using MextFullstackSaaS.Application.Common.Models.Emails;
-using Resend;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Resend;
-using System.Web;
-using MextFullstackSaaS.Domain.Identity;
 using MextFullstackSaaS.Application.Common.Translations;
 using Microsoft.Extensions.Localization;
+using Resend;
+using System.Web;
 
 namespace MextFullstackSaaS.Infrastructure.Services
 {
@@ -56,7 +49,7 @@ namespace MextFullstackSaaS.Infrastructure.Services
         {
             var message = new EmailMessage();
 
-            message.From = "noreply@yazilim.academy";
+            message.From = "onboarding@resend.dev";
 
             foreach (var emailAddress in emailSendDto.Addresses)
                 message.To.Add(emailAddress);
@@ -88,7 +81,7 @@ namespace MextFullstackSaaS.Infrastructure.Services
         public async Task SendResetPasswordConfirmationAsync(EmailSendResetPasswordConfirmationDto emailDto, CancellationToken cancellationToken)
         {
             var message = new EmailMessage();
-            message.From = "support@resend.dev";
+            message.From = "onboarding@resend.dev";
             message.To.Add(emailDto.Email);
             message.Subject = "Password Reset Confirmation | IconBuilderAI";
             message.HtmlBody = $"<div><strong>Your password has been successfully reset.</strong></div>";

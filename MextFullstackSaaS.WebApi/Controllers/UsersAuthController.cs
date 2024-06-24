@@ -23,19 +23,16 @@ public class UsersAuthController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> RegisterAsync(UserAuthRegisterCommand command, CancellationToken cancellationToken)
     {
-        //throw new ArgumentNullException(command.FirstName, "First name is required");
         return Ok(await _mediatr.Send(command, cancellationToken));
     }
     [HttpPost("login")]
     public async Task<IActionResult> LoginAsync(UserAuthLoginCommand command, CancellationToken cancellationToken)
     {
-        //throw new ArgumentNullException(command.FirstName, "First name is required");
         return Ok(await _mediatr.Send(command, cancellationToken));
     }
     [HttpGet("verify-email")]
     public async Task<IActionResult> VerifyEmailAsync([FromQuery]UserAuthVerifyEmailCommand command, CancellationToken cancellationToken)
     {
-        //throw new ArgumentNullException(command.FirstName, "First name is required");
         return Ok(await _mediatr.Send(command, cancellationToken));
     }
 
