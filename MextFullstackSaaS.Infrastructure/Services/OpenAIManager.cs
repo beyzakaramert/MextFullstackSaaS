@@ -62,7 +62,7 @@ namespace MextFullstackSaaS.Infrastructure.Services
             var promptBuilder = new StringBuilder();
 
             promptBuilder.Append(
-            $"You're a World-class Icon Designer AI, Please generate an icon for a mobile app.Make sure the icon is filling the full width and heigt of the image. Generate icon with the following specifications below. I'll tip you 1000$ for your work, if I like it.");
+            $"You're a World-class Icon Designer AI, Please generate an icon for a mobile app.Make sure the icon is fit the full width and heigt. Generate icon with the following specifications below. I'll tip you 1000$ for your work, if I like it.");
 
             promptBuilder.Append($"<DesignType>{request.DesignType}</DesignType>");
 
