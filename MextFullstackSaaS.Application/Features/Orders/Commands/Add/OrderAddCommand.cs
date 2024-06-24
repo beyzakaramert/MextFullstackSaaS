@@ -16,7 +16,7 @@ namespace MextFullstackSaaS.Application.Features.Orders.Commands.Add
         public IconShape Shape { get; set; }
         public int Quantity { get; set; }
 
-        public static Order MapToOrder(OrderAddCommand orderAddCommand)
+        public static Order MapToOrder(OrderAddCommand orderAddCommand, Guid userId)
         {
             return new Order
             {
