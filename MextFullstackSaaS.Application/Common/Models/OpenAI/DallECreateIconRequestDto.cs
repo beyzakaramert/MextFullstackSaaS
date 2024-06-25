@@ -1,10 +1,5 @@
 ﻿using MextFullstackSaaS.Application.Features.Orders.Commands.Add;
 using MextFullstackSaaS.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MextFullstackSaaS.Application.Common.Models.OpenAI
 {
@@ -17,9 +12,6 @@ namespace MextFullstackSaaS.Application.Common.Models.OpenAI
         public IconSize Size { get; set; }
         public IconShape Shape { get; set; }
         public int Quantity { get; set; }
-
-
-
 
         public static DallECreateIconRequestDto MapFromOrderAddCommand(OrderAddCommand orderAddCommand)
         {

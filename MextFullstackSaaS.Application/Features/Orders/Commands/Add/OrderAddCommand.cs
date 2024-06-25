@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using MextFullstackSaaS.Application.Common.Models;
-using MextFullstackSaaS.Application.Features.Orders.Commands.Update;
 using MextFullstackSaaS.Domain.Entities;
 using MextFullstackSaaS.Domain.Enums;
 
@@ -28,13 +27,10 @@ namespace MextFullstackSaaS.Application.Features.Orders.Commands.Add
                 Size = orderAddCommand.Size,
                 Shape = orderAddCommand.Shape,
                 Quantity = orderAddCommand.Quantity,
+                UserId = userId,
+                CreatedByUserId = userId.ToString(),
                 CreatedOn = DateTimeOffset.UtcNow,
             };
-        }
-
-        internal static Order MapToOrder(OrderUpdateCommand request)
-        {
-            throw new NotImplementedException();
         }
     }
 }

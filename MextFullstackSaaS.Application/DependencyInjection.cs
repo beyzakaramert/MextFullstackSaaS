@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+﻿    using FluentValidation;
 using MediatR;
 using MextFullstackSaaS.Application.Common.Behaviours;
 using Microsoft.Extensions.DependencyInjection;

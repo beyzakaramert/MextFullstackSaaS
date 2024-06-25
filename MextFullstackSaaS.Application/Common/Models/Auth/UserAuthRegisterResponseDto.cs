@@ -17,6 +17,7 @@ public class UserAuthRegisterResponseDto
         Email = email;
 
         FirstName = firstName;
+
         EmailToken = emailToken;
     }
 }

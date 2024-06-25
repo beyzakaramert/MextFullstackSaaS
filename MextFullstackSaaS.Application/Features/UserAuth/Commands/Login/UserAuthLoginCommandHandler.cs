@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using MextFullstackSaaS.Application.Common.Interfaces;
 using MextFullstackSaaS.Application.Common.Models;
-using MextFullstackSaaS.Application.Features.UserAuth.Commands.Register;
 
 namespace MextFullstackSaaS.Application.Features.UserAuth.Commands.Login
 {

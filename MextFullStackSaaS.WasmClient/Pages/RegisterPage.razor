@@ -1,15 +1,14 @@
 ﻿@page "/register"
-@using System.Net
 @using MextFullstackSaaS.Application.Common.Models
 @using MextFullstackSaaS.Application.Features.UserAuth.Commands.Register
+@using MextFullStackSaaS.WasmClient.Services
 @inject HttpClient HttpClient
-@inject IToastService ToasterService
+@inject IToasterService ToasterService
 @inject NavigationManager NavigationManager
-
 
 @if (isAuthenticated)
 {
-    <h2>You've already been authenticated. Please log out first to register with another account.'</h2>
+    <h2>You've already been authenticated. Please log out first to register with another account.</h2>
     <button class="btn btn-secondary" @onclick="@(() => NavigationManager.NavigateTo("/"))">Go to Homepage</button>
 }
 else
@@ -22,8 +21,8 @@ else
                 @if (isValidSubmit)
                 {
                     <div role="alert" class="alert alert-success mt-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        <span>Welcome!👋 A verification email has been sent to your e-mail address!🎉</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="shrink-0 h-6 w-6 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <span>Welcome! 👋 A verification email has been sent to your e-mail address! 🎉</span>
                     </div>
                 }
             </div>
@@ -31,17 +30,17 @@ else
                 <div class="relative mx-auto mt-8 max-w-md md:mt-10">
                     <div class="overflow-hidden rounded-md bg-white shadow-md">
                         <div class="px-4 py-6 sm:px-8 sm:py-7">
-                            <div>
+                            <div class="space-y-5">
                                 <div>
                                     <label class="text-base font-medium text-gray-900"> First Name </label>
                                     <div class="relative mt-2.5 text-gray-400 focus-within:text-gray-600">
-                                        <InputText @bind-Value="command.FirstName" type="text" placeholder="Enter your first name" class="block w-full rounded-md border border-gray-200 bg-white py-4 pl-4 pr-4 text-black placeholder-gray-500 caret-blue-600 transition-all duration-200 focus:border-blue-600 focus:outline-none" />
+                                        <InputText @bind-Value="@command.FirstName" type="text" placeholder="Enter your first name" class="block w-full rounded-md border border-gray-200 bg-white py-4 pl-4 pr-4 text-black placeholder-gray-500 caret-blue-600 transition-all duration-200 focus:border-blue-600 focus:outline-none" />
                                     </div>
                                 </div>
                                 <div>
                                     <label class="text-base font-medium text-gray-900"> Last Name </label>
                                     <div class="relative mt-2.5 text-gray-400 focus-within:text-gray-600">
-                                        <InputText @bind-Value="command.LastName" type="text" placeholder="Enter your last name" class="block w-full rounded-md border border-gray-200 bg-white py-4 pl-4 pr-4 text-black placeholder-gray-500 caret-blue-600 transition-all duration-200 focus:border-blue-600 focus:outline-none" />
+                                        <InputText @bind-Value="@command.LastName" type="text" placeholder="Enter your last name" class="block w-full rounded-md border border-gray-200 bg-white py-4 pl-4 pr-4 text-black placeholder-gray-500 caret-blue-600 transition-all duration-200 focus:border-blue-600 focus:outline-none" />
                                     </div>
                                 </div>
                                 <div>
@@ -51,10 +50,10 @@ else
                                             <svg class="h-5 w-5" fill="#31363F" height="24px" width="24px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 75.294 75.294" xml:space="preserve">
                                             <g>
                                             <path d="M66.097,12.089h-56.9C4.126,12.089,0,16.215,0,21.286v32.722c0,5.071,4.126,9.197,9.197,9.197h56.9 c5.071,0,9.197-4.126,9.197-9.197V21.287C75.295,16.215,71.169,12.089,66.097,12.089z M61.603,18.089L37.647,33.523L13.691,18.089 H61.603z M66.097,57.206h-56.9C7.434,57.206,6,55.771,6,54.009V21.457l29.796,19.16c0.04,0.025,0.083,0.042,0.124,0.065 c0.043,0.024,0.087,0.047,0.131,0.069c0.231,0.119,0.469,0.215,0.712,0.278c0.025,0.007,0.05,0.01,0.075,0.016 c0.267,0.063,0.537,0.102,0.807,0.102c0.001,0,0.002,0,0.002,0c0.002,0,0.003,0,0.004,0c0.27,0,0.54-0.038,0.807-0.102 c0.025-0.006,0.05-0.009,0.075-0.016c0.243-0.063,0.48-0.159,0.712-0.278c0.044-0.022,0.088-0.045,0.131-0.069 c0.041-0.023,0.084-0.04,0.124-0.065l29.796-19.16v32.551C69.295,55.771,67.86,57.206,66.097,57.206z" />
-                                            </g>
-                                        </svg>
+                                                </g>
+                                            </svg>
                                         </div>
-                                        <InputText @bind-Value="command.Email" type="email" placeholder="Enter your email address" class="block w-full rounded-md border border-gray-200 bg-white py-4 pl-10 pr-4 text-black placeholder-gray-500 caret-blue-600 transition-all duration-200 focus:border-blue-600 focus:outline-none" />
+                                        <InputText @bind-Value="@command.Email" type="email" placeholder="Enter your email address" class="block w-full rounded-md border border-gray-200 bg-white py-4 pl-10 pr-4 text-black placeholder-gray-500 caret-blue-600 transition-all duration-200 focus:border-blue-600 focus:outline-none" />
                                     </div>
                                 </div>
                                 <div>
@@ -154,9 +153,11 @@ else
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+
         var authState = await authenticationStateTask;
 
         isAuthenticated = authState.User.Identity.IsAuthenticated;
+
     }
 
     private async Task OnValidSubmit()
@@ -179,7 +180,7 @@ else
             }
             else
             {
-                ToasterService.ShowError($"Beklenmedik bir hata oluştu.Response Code:{response.StatusCode}");
+                ToasterService.ShowError($"Beklenmedik bir hata olustu. Response Code:{response.StatusCode}");
             }
 
         }

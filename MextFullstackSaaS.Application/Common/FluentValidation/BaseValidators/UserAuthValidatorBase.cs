@@ -1,12 +1,6 @@
 ﻿using FluentValidation;
 using MextFullstackSaaS.Application.Common.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Principal;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace MextFullstackSaaS.Application.Common.FluentValidation.BaseValidators
 {
@@ -25,8 +19,5 @@ namespace MextFullstackSaaS.Application.Common.FluentValidation.BaseValidators
 
             return Regex.IsMatch(email, emailPattern, RegexOptions.IgnoreCase);
         }
-
-
-    }
-    
+    }    
 }

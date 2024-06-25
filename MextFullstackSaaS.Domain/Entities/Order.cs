@@ -4,7 +4,7 @@ using MextFullstackSaaS.Domain.Identity;
 
 namespace MextFullstackSaaS.Domain.Entities
 {
-    public class Order:EntityBase<Guid>
+    public class Order : EntityBase<Guid>
     {
         public Guid UserId { get; set; }
         public User User { get; set; }

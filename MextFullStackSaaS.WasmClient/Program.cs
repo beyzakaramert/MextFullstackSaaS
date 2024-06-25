@@ -1,6 +1,5 @@
 using Blazored.LocalStorage;
 using Blazored.Toast;
-using MextFullstackSaaS.WasmClient;
 using MextFullStackSaaS.WasmClient;
 using MextFullStackSaaS.WasmClient.Services;
 using Microsoft.AspNetCore.Components.Authorization;

@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MextFullstackSaaS.Infrastructure.Persistence.Contexts
 {
-    public class ApplicationDbContext : IdentityDbContext<User, Role, Guid,UserClaim,UserRole,UserLogin,RoleClaim,UserToken>, IApplicationDbContext
+    public class ApplicationDbContext : IdentityDbContext<User, Role, Guid, UserClaim, UserRole, UserLogin, RoleClaim, UserToken>, IApplicationDbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options):base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
-            
+
         }
 
         public DbSet<Order> Orders { get; set; }

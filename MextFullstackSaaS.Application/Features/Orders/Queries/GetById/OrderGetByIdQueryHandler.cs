@@ -15,15 +15,14 @@ namespace MextFullstackSaaS.Application.Features.Orders.Queries.GetById
         public OrderGetByIdQueryHandler(IApplicationDbContext dbContext, IMemoryCache memoryCache)
         {
             _dbContext = dbContext;
-            _memoryCache = memoryCache; 
+            _memoryCache = memoryCache;
         }
 
         public async Task<OrderGetByIdDto> Handle(OrderGetByIdQuery request, CancellationToken cancellationToken)
         {
-
             OrderGetByIdDto order;
 
-            if (_memoryCache.TryGetValue(MemoryCacheHelper.GetOrderGetByIdKey(request.Id),out order))
+            if (_memoryCache.TryGetValue(MemoryCacheHelper.GetOrderGetByIdKey(request.Id), out order))
                 return order;
 
             var normalOrder = await _dbContext
@@ -33,7 +32,8 @@ namespace MextFullstackSaaS.Application.Features.Orders.Queries.GetById
 
             order = OrderGetByIdDto.MapFromOrder(normalOrder);
 
-            _memoryCache.Set(MemoryCacheHelper.GetOrderGetByIdKey(request.Id), order, MemoryCacheHelper.GetMemoryCacheEntryOptions());
+            _memoryCache.Set(MemoryCacheHelper.GetOrderGetByIdKey(request.Id), order,
+                MemoryCacheHelper.GetMemoryCacheEntryOptions());
 
             return order;
         }

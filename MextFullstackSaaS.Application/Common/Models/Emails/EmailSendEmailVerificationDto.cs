@@ -1,54 +1,20 @@
-﻿namespace MextFullstackSaaS.Application.Common.Models.Emails
+﻿namespace MextFullstackSaaS.Application.Common.Models.Emails;
+
+public class EmailSendEmailVerificationDto
 {
-    public class EmailSendEmailVerificationDto
+    public string Email { get; set; }
+    public string FirstName { get; set; }
+    public string Token { get; set; }
+
+    public EmailSendEmailVerificationDto(string email, string firstName, string token)
     {
-        public string Email { get; set; }
-
-        public string Subject { get; set; }
-
-        public string FirstName { get; set; }
-
-        public string Token { get; set; }
-
-        public EmailSendEmailVerificationDto(string email, string firstName, string token)
-        {
-            Email = email;
-            FirstName = firstName;
-            Token = token;
-        }
-
-        public EmailSendEmailVerificationDto()
-        {
-
-        }
-    }
-    public class EmailSendForgotPasswordDto
-    {
-        public string Email { get; set; }
-        public string Token { get; set; }
-
-        public EmailSendForgotPasswordDto(string email, string token)
-        {
-            Email = email;
-            Token = token;
-        }
-
-        public EmailSendForgotPasswordDto()
-        {
-        }
+        Email = email;
+        FirstName = firstName;
+        Token = token;
     }
 
-    public class EmailSendResetPasswordConfirmationDto
+    public EmailSendEmailVerificationDto()
     {
-        public string Email { get; set; }
 
-        public EmailSendResetPasswordConfirmationDto(string email)
-        {
-            Email = email;
-        }
-
-        public EmailSendResetPasswordConfirmationDto()
-        {
-        }
     }
 }

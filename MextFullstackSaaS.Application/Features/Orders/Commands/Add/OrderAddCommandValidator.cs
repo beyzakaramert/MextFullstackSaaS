@@ -4,7 +4,7 @@ using MextFullstackSaaS.Domain.Enums;
 
 namespace MextFullstackSaaS.Application.Features.Orders.Commands.Add
 {
-    public class OrderAddCommandValidator: AbstractValidator<OrderAddCommand>
+    public class OrderAddCommandValidator : AbstractValidator<OrderAddCommand>
     {
         private readonly ICurrentUserService _currentUserService;
 
@@ -12,7 +12,7 @@ namespace MextFullstackSaaS.Application.Features.Orders.Commands.Add
         {
             _currentUserService = currentUserService;
 
-            RuleFor(x=>x.IconDescription)
+            RuleFor(x => x.IconDescription)
                 .NotEmpty()
                 .MaximumLength(200)
                 .WithMessage("The icon description must be less than 200 characters.");

@@ -3,12 +3,10 @@ using MextFullstackSaaS.Application.Common.Interfaces;
 using MextFullstackSaaS.Application.Common.Models;
 using MextFullstackSaaS.Domain.Entities;
 using MextFullstackSaaS.Domain.Enums;
-using Microsoft.EntityFrameworkCore;
-using System.Threading;
 
 namespace MextFullstackSaaS.Application.Features.Orders.Commands.AddRange
 {
-    public class OrderAddRangeCommandHandler :IRequestHandler<OrderAddRangeCommand, ResponseDto<int>>
+    public class OrderAddRangeCommandHandler : IRequestHandler<OrderAddRangeCommand, ResponseDto<int>>
     {
         private readonly IApplicationDbContext _dbContext;
         private readonly ICurrentUserService _currentUserService;
@@ -39,8 +37,9 @@ namespace MextFullstackSaaS.Application.Features.Orders.Commands.AddRange
                     ColourCode = "Red",
                     UserId = _currentUserService.UserId,
                     CreatedOn = DateTimeOffset.UtcNow,
-                    CreatedByUserId = _currentUserService.UserId.ToString()
+                    CreatedByUserId = _currentUserService.UserId.ToString(),
                 };
+
                 orders.Add(order);
             }
 

@@ -5,7 +5,7 @@ using MextFullstackSaaS.Application.Common.Helpers;
 using MextFullstackSaaS.Application.Common.Models;
 using Microsoft.AspNetCore.Components.Authorization;
 
-namespace MextFullstackSaaS.WasmClient
+namespace MextFullStackSaaS.WasmClient
 {
     public class CustomAuthStateProvider : AuthenticationStateProvider
     {
@@ -26,8 +26,7 @@ namespace MextFullstackSaaS.WasmClient
             {
                 var claims = JwtHelper
                     .ReadClaimsFromToken(jwtDto.Token)
-                    .Append(new Claim("Token", jwtDto.Token))
-                    .Append(new Claim("Name", jwtDto.Token));
+                    .Append(new Claim("Token", jwtDto.Token));
 
                 var identity = new ClaimsIdentity(claims, "jwt");
 
@@ -46,11 +45,11 @@ namespace MextFullstackSaaS.WasmClient
 
             var anonymous = new ClaimsPrincipal(new ClaimsIdentity());
 
-            var anonymusState = new AuthenticationState(anonymous);
+            var anonymousState = new AuthenticationState(anonymous);
 
-            NotifyAuthenticationStateChanged(Task.FromResult(anonymusState));
+            NotifyAuthenticationStateChanged(Task.FromResult(anonymousState));
 
-            return anonymusState;
+            return anonymousState;
         }
     }
 }

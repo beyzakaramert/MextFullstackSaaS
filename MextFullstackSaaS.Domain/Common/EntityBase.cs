@@ -1,6 +1,6 @@
 ﻿namespace MextFullstackSaaS.Domain.Common
 {
-    public abstract class EntityBase<TKey>:IEntity<TKey>,ICreatedByEntity, IModifiedByEntity
+    public abstract class EntityBase<TKey> : IEntity<TKey>, ICreatedByEntity, IModifiedByEntity
     {
         public TKey Id { get; set; }
 

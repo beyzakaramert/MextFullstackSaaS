@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MextFullstackSaaS.Application.Features.Orders.Queries.GetById
 {
-    public class OrderGetByIdQueryValidator:AbstractValidator<OrderGetByIdQuery>
+    public class OrderGetByIdQueryValidator : AbstractValidator<OrderGetByIdQuery>
     {
         private readonly IApplicationDbContext _dbContext;
         public OrderGetByIdQueryValidator(IApplicationDbContext dbContext)

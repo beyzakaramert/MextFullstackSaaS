@@ -29,7 +29,7 @@
                     <EditForm Model="@command" OnSubmit="HandleSubmit" FormName="loginform">
                         <DataAnnotationsValidator />
                         <ValidationSummary class="mb-1 text-red-500" />
-                        <ErrorList Errors="errors"/>
+                        <ErrorList Errors="errors" />
                         <div class="space-y-5">
                             <!-- Email input -->
                             <div>
@@ -108,10 +108,8 @@
 
 @code
 {
-
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
-
 
     // Login model to bind form data
     private UserAuthLoginCommand command = new();
@@ -154,9 +152,9 @@
                 if (response.StatusCode == HttpStatusCode.BadRequest)
                 {
                     var responseDto = await response.Content.ReadFromJsonAsync<ResponseDto<JwtDto>>();
-                    
+
                     errors = responseDto.Errors;
-                    
+
                     ToasterService.ShowWarning(responseDto.Message);
                 }
                 else
@@ -164,7 +162,7 @@
                     ToasterService.ShowError($"Beklenmedik bir hata olustu. Response Code:{response.StatusCode}");
                 }
 
-               
+
             }
 
         }

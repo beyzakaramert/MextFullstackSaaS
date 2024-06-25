@@ -1,19 +1,20 @@
 ﻿@page "/community"
 @using Microsoft.AspNetCore.SignalR.Client
 
+
 <h3>CommunityPage</h3>
 
 @if (urls is null)
 {
-    <Loading/>
+    <Loading />
 }
-else if(urls is not null && ! urls.Any())
+else if (urls is not null && !urls.Any())
 {
-    <h4>There are no icons to show</h4>
+    <h4>There are no icons to show.</h4>
 }
 else
 {
-    foreach(var url in urls)
+    foreach (var url in urls)
     {
         <p class="text-indigo-500 block">@url</p>
     }
@@ -21,21 +22,22 @@ else
 
 @code {
     private List<string> urls = null;
-
-    private HubConnection? hubconnection;
+    private HubConnection? hubConnection;
 
     protected override async Task OnInitializedAsync()
     {
-        hubconnection = new HubConnectionBuilder()
-        .WithUrl("https://localhost:7281/hubs/orderHub")//swagger host
-        .WithAutomaticReconnect()
-        .Build();
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl("https://localhost:5275/hubs/orderHub")
+            .WithAutomaticReconnect()
+            .Build();
 
-        await hubconnection.StartAsync();
+        await hubConnection.StartAsync();
 
-        urls =await hubconnection.InvokeAsync<List<string>>("GetAllCommunityAsync");
+        urls = await hubConnection.InvokeAsync<List<string>>("GetAllCommunityAsync");
 
         await base.OnInitializedAsync();
     }
+
+
 
 }

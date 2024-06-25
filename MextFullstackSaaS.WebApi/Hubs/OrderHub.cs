@@ -17,7 +17,7 @@ namespace MextFullstackSaaS.WebApi.Hubs
 
         }
 
-        public Task GetAllCommunityAsync()
+        public Task<List<string>> GetAllCommunityAsync()
         {
             return _mediatr.Send(new OrderGetAllCommunityQuery());
         }

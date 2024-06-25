@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace MextFullstackSaaS.Infrastructure.Persistence.Seeders
 {
-    public class UserBalanceSeeder:IEntityTypeConfiguration<UserBalance>
+    public class UserBalanceSeeder : IEntityTypeConfiguration<UserBalance>
     {
         public void Configure(EntityTypeBuilder<UserBalance> builder)
         {

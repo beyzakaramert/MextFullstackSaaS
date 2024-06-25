@@ -2295,10 +2295,6 @@ details.collapse summary::-webkit-details-marker {
   height: 1.5rem;
 }
 
-.h-screen {
-  height: 100vh;
-}
-
 .min-h-screen {
   min-height: 100vh;
 }
@@ -2329,10 +2325,6 @@ details.collapse summary::-webkit-details-marker {
 
 .w-6 {
   width: 1.5rem;
-}
-
-.w-96 {
-  width: 24rem;
 }
 
 .w-\[200px\] {
