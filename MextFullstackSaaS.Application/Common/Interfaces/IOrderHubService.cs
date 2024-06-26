@@ -2,6 +2,6 @@
 {
     public interface IOrderHubService
     {
-        Task NewOrderAddedAsync(string url,CancellationToken cancellationToken);
+        Task NewOrderAddedAsync(List<string> urls,CancellationToken cancellationToken);
     }
 }
