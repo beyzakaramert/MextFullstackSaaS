@@ -2267,6 +2267,10 @@ details.collapse summary::-webkit-details-marker {
   display: inline-flex;
 }
 
+.grid {
+  display: grid;
+}
+
 .hidden {
   display: none;
 }
@@ -2287,12 +2291,20 @@ details.collapse summary::-webkit-details-marker {
   height: 6rem;
 }
 
+.h-32 {
+  height: 8rem;
+}
+
 .h-5 {
   height: 1.25rem;
 }
 
 .h-6 {
   height: 1.5rem;
+}
+
+.h-full {
+  height: 100%;
 }
 
 .min-h-screen {
@@ -2313,6 +2325,10 @@ details.collapse summary::-webkit-details-marker {
 
 .w-24 {
   width: 6rem;
+}
+
+.w-32 {
+  width: 8rem;
 }
 
 .w-5 {
@@ -2393,6 +2409,10 @@ details.collapse summary::-webkit-details-marker {
 
 .list-disc {
   list-style-type: disc;
+}
+
+.grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
 }
 
 .flex-row {
@@ -2571,6 +2591,11 @@ details.collapse summary::-webkit-details-marker {
 
 .stroke-current {
   stroke: currentColor;
+}
+
+.object-cover {
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 
 .p-2 {
@@ -2919,6 +2944,10 @@ details.collapse summary::-webkit-details-marker {
 }
 
 @media (min-width: 640px) {
+  .sm\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .sm\:px-6 {
     padding-left: 1.5rem;
     padding-right: 1.5rem;
@@ -2962,6 +2991,10 @@ details.collapse summary::-webkit-details-marker {
   .md\:w-\[700px\] {
     width: 700px;
   }
+
+  .md\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 @media (min-width: 1024px) {
@@ -2971,6 +3004,10 @@ details.collapse summary::-webkit-details-marker {
 
   .lg\:hidden {
     display: none;
+  }
+
+  .lg\:grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
   .lg\:px-8 {
