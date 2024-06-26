@@ -27,7 +27,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         hubConnection = new HubConnectionBuilder()
-            .WithUrl("https://localhost:5275/hubs/orderHub")
+            .WithUrl("http://localhost:5121/hubs/orderHub")
             .WithAutomaticReconnect()
             .Build();
 

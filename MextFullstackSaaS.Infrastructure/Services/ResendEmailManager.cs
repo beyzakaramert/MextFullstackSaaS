@@ -20,7 +20,7 @@ public class ResendEmailManager : IEmailService
         _localizer = localizer;
     }
 
-    private const string WebAppBaseUrl = "http://localhost:5262/";
+    private const string WebAppBaseUrl = "http://localhost:5121/";
     public async Task SendEmailVerificationAsync(EmailSendEmailVerificationDto emailDto, CancellationToken cancellationToken)
     {
         var encodedEmail = HttpUtility.UrlEncode(emailDto.Email);
@@ -69,7 +69,7 @@ public class ResendEmailManager : IEmailService
     {
         var message = new EmailMessage();
 
-        message.From = "noreply@yazilim.academy";
+        message.From = "onboarding@resend.dev";
 
         foreach (var emailAddress in emailSendDto.Addresses)
             message.To.Add(emailAddress);
