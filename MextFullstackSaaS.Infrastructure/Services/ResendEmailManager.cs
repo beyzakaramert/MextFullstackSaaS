@@ -20,7 +20,7 @@ public class ResendEmailManager : IEmailService
         _localizer = localizer;
     }
 
-    private const string WebAppBaseUrl = "http://localhost:5121/";
+    private const string WebAppBaseUrl = "http://localhost:5275/";
     public async Task SendEmailVerificationAsync(EmailSendEmailVerificationDto emailDto, CancellationToken cancellationToken)
     {
         var encodedEmail = HttpUtility.UrlEncode(emailDto.Email);
