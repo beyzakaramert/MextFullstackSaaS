@@ -15,7 +15,7 @@ namespace MextFullstackSaaS.Application.Common.FluentValidation.BaseValidators
 
         protected bool IsEmail(string email)
         {
-            if (email == null)
+            if (string.IsNullOrEmpty(email))
             {
                 return false;
             }
