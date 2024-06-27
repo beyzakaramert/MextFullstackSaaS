@@ -15,6 +15,11 @@ namespace MextFullstackSaaS.Application.Common.FluentValidation.BaseValidators
 
         protected bool IsEmail(string email)
         {
+            if (email == null)
+            {
+                return false;
+            }
+
             string emailPattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
 
             return Regex.IsMatch(email, emailPattern, RegexOptions.IgnoreCase);
