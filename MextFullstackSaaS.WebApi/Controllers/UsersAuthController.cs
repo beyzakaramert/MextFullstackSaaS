@@ -1,8 +1,7 @@
-﻿using Google.Apis.Auth.OAuth2.Flows;
+﻿using Google.Apis.Auth;
 using Google.Apis.Auth.OAuth2;
-using Google.Apis.Auth;
+using Google.Apis.Auth.OAuth2.Flows;
 using MediatR;
-using MextFullstackSaaS.Application.Common.Models;
 using MextFullstackSaaS.Application.Features.UserAuth.Commands.Login;
 using MextFullstackSaaS.Application.Features.UserAuth.Commands.Register;
 using MextFullstackSaaS.Application.Features.UserAuth.Commands.VerifyEmail;
@@ -40,7 +39,7 @@ public class UsersAuthController : ControllerBase
     public IActionResult GoogleSignInStart()
         => Redirect(_googleAuthorizationUrl);
 
-    [HttpGet("GoogleSignIn")]
+    [HttpGet("signin-google")]
     public async Task<IActionResult> SignInGoogleAsync(string code, CancellationToken cancellationToken)
     {
         var flow = new GoogleAuthorizationCodeFlow(new GoogleAuthorizationCodeFlow.Initializer()
