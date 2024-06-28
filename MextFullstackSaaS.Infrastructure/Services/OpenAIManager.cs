@@ -5,7 +5,7 @@ using MextFullstackSaaS.Domain.Enums;
 using Microsoft.Extensions.Primitives;
 using OpenAI.ObjectModels;
 using OpenAI.ObjectModels.RequestModels;
-
+using OpenAI.ObjectModels.ResponseModels.ImageResponseModel;
 
 namespace MextFullstackSaaS.Infrastructure.Services;
 
@@ -22,10 +22,37 @@ public class OpenAIManager : IOpenAIService
 
     public async Task<List<string>> DallECreateIconAsync(DallECreateIconRequestDto requestDto, CancellationToken cancellationToken)
     {
+        if (requestDto.Model == AIModelType.DallE3)
+        {
+            List<Task<ImageCreateResponse>> openAITasks = new();
+
+            for (int i = 0; i < requestDto.Quantity; i++)
+            {
+                openAITasks.Add(_openAiService.Image.CreateImage(new ImageCreateRequest
+                {
+                    Prompt = CreateIconPrompt(requestDto),
+                    N = 1,
+                    Size = GetSize(requestDto.Size),
+                    ResponseFormat = StaticValues.ImageStatics.ResponseFormat.Url,
+                    User = _currentUserService.UserId.ToString(),
+                    Model = Models.Dall_e_3
+                }, cancellationToken));
+            }
+
+            await Task.WhenAll(openAITasks);
+
+            var responses = await Task.WhenAll(openAITasks);
+
+            return responses
+                .SelectMany(response => response.Results.Select(result => result.Url))
+                .ToList();
+        }
+
+
         var imageResult = await _openAiService.Image.CreateImage(new ImageCreateRequest
         {
             Prompt = CreateIconPrompt(requestDto),
-            N = requestDto.Model == AIModelType.DallE3 ? 1 : requestDto.Quantity,
+            N = requestDto.Quantity,
             Size = GetSize(requestDto.Size),
             ResponseFormat = StaticValues.ImageStatics.ResponseFormat.Url,
             User = _currentUserService.UserId.ToString(),
@@ -41,6 +68,7 @@ public class OpenAIManager : IOpenAIService
             .Results
             .Select(x => x.Url)
             .ToList();
+
     }
 
     private string GetSize(IconSize size)
@@ -59,7 +87,7 @@ public class OpenAIManager : IOpenAIService
         var promptBuilder = new StringBuilder();
 
         promptBuilder.Append(
-            $"You're a World-class Icon Designer AI, Please generate an icon for a mobile app. Make sure the icon is fit the full width and height.I want you to create a picture. Generate icon with the following specifications below. I'll tip you 1000$ for your work, if I like it.");
+            $"You're a World-class Icon Designer AI, Please generate an icon for a mobile app. Make sure the icon is fit the full width and height. Generate icon with the following specifications below. I'll tip you 1000$ for your work, if I like it.");
 
         promptBuilder.Append($"<DesignType>{request.DesignType}</DesignType>");
 
