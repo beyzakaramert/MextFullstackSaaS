@@ -1,5 +1,7 @@
 ﻿using MediatR;
 using MextFullstackSaaS.Application.Common.Models;
+using MextFullstackSaaS.Domain.Entities;
+using MextFullstackSaaS.Domain.Identity;
 
 namespace MextFullstackSaaS.Application.Features.UserAuth.Commands.Social_Login
 {
@@ -24,6 +26,31 @@ namespace MextFullstackSaaS.Application.Features.UserAuth.Commands.Social_Login
         public UserAuthSocialLoginCommand() 
         {
 
+        }
+
+        public static User ToUser(UserAuthSocialLoginCommand command)
+        {
+            var id = Guid.NewGuid();
+
+            return new User()
+            {
+                Id = id,
+                Email = command.Email,
+                UserName = command.Email,
+                FirstName = command.FirstName,
+                LastName = command.LastName,
+                CreatedOn = DateTimeOffset.UtcNow,
+                CreatedByUserId = id.ToString(),
+                EmailConfirmed = true,
+                Balance = new UserBalance()
+                {
+                    Id = Guid.NewGuid(),
+                    Credits = 0,
+                    UserId = id,
+                    CreatedOn = DateTimeOffset.UtcNow,
+                    CreatedByUserId = id.ToString()
+                }
+            };
         }
     }
 }

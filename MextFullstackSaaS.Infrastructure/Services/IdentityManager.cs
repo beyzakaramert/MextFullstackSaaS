@@ -49,7 +49,20 @@ namespace MextFullstackSaaS.Infrastructure.Services
 
             return jwtDto;
         }
+        public async Task<JwtDto> SocialLoginAsync(UserAuthSocialLoginCommand command, CancellationToken cancellationToken)
+        {
+            User? user;
 
+            user = await _userManager.FindByEmailAsync(command.Email);
+
+            if (user is null)
+            {
+                user = UserAuthSocialLoginCommand.ToUser(command);
+
+                var result = await _userManager.CreateAsync(user);
+
+            }
+        }
         public async Task<bool> IsEmailExistsAsync(string email, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByEmailAsync(email);
@@ -88,33 +101,6 @@ namespace MextFullstackSaaS.Infrastructure.Services
             return _userManager.Users.AnyAsync(x => x.Email == email && x.EmailConfirmed, cancellationToken);
         }
 
-        public async Task<JwtDto> SocialLoginAsync(UserAuthSocialLoginCommand command, CancellationToken cancellationToken)
-        {
-            User? user;
-
-            user = await _userManager.FindByEmailAsync(command.Email);
-
-            if (user is null)
-            {
-                user = new User();
-
-                user.Id = Guid.NewGuid();
-                user.UserName = command.Email;
-                user.Email = command.Email;
-                user.EmailConfirmed = true;
-                user.FirstName = command.FirstName;
-                user.LastName = command.LastName;
-                user.CreatedOn=DateTimeOffset.UtcNow;
-                user.CreatedByUserId = user.Id.ToString();
-                user.Balance = new UserBalance()
-                {
-                    Id = Guid.NewGuid(),
-                    UserId = user.Id,
-                    Credits = 0,
-                    CreatedOn = DateTimeOffset.UtcNow,
-                    CreatedByUserId = user.Id.ToString(),
-                };
-            }
-        }
+        
     }
 }
