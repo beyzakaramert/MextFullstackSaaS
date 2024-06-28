@@ -1,4 +1,16 @@
 ﻿@page "/social-login"
+@layout AuthLayout
+@using System.Net
+@using Blazored.LocalStorage
+@using MextFullstackSaaS.Application.Common.Models
+@using MextFullstackSaaS.Application.Features.UserAuth.Commands.Login
+@using MextFullStackSaaS.WasmClient.Services
+@using Microsoft.AspNetCore.Components.Authorization
+@inject HttpClient HttpClient
+@inject IToasterService ToasterService
+@inject ILocalStorageService LocalStorage
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthStateProvider
 
 <Loading/>
 
@@ -10,6 +22,26 @@
 
     [SupplyParameterFromQuery(Name = "expiry_date")]
     [Parameter]
-    public string ExpiryDate { get; set; }
-        
+    public long ExpiryDate { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var jwtDto = new JwtDto
+        {
+            Token = AccessToken,
+            Expires = DateTime.FromBinary(ExpiryDate)
+        };
+
+
+        await LocalStorage.SetItemAsync<JwtDto>("cto", jwtDto);
+
+        await AuthStateProvider.GetAuthenticationStateAsync();
+
+        ToasterService.ShowSuccess("Welcome! You have successfully logged in.");
+
+        NavigationManager.NavigateTo("/");
+
+        await base.OnInitializedAsync();
+    }
 }
