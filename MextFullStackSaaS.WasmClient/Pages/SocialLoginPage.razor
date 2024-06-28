@@ -1,22 +1,15 @@
 ﻿@page "/social-login"
 
-<h3 class="my-auto">Email:@Email</h3>
-<h3 class="my-auto">FirstName:@FirstName</h3>
-<h3 class="my-auto">LastName:@LastName</h3>
-
+<Loading/>
 
 @code {
 
-    [SupplyParameterFromQuery]
+    [SupplyParameterFromQuery(Name = "access_token")]
     [Parameter]
-    public string Email { get; set; }
+    public string AccessToken { get; set; }
 
-    [SupplyParameterFromQuery]
+    [SupplyParameterFromQuery(Name = "expiry_date")]
     [Parameter]
-    public string FirstName { get; set; }
-
-    [SupplyParameterFromQuery]
-    [Parameter]
-    public string LastName { get; set; }
-
+    public string ExpiryDate { get; set; }
+        
 }

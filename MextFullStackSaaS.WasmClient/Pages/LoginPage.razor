@@ -179,7 +179,7 @@
     }
 
     // Handle Google sign-in
-    private async Task HandleGoogleLogin()
+    private void HandleGoogleLogin()
     {
         NavigationManager.NavigateTo("http://localhost:5121/api/UsersAuth/signin-google-start");
     }
