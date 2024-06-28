@@ -4,7 +4,9 @@ using MextFullstackSaaS.Application.Common.Models;
 using MextFullstackSaaS.Application.Common.Models.Auth;
 using MextFullstackSaaS.Application.Features.UserAuth.Commands.Login;
 using MextFullstackSaaS.Application.Features.UserAuth.Commands.Register;
+using MextFullstackSaaS.Application.Features.UserAuth.Commands.Social_Login;
 using MextFullstackSaaS.Application.Features.UserAuth.Commands.VerifyEmail;
+using MextFullstackSaaS.Domain.Entities;
 using MextFullstackSaaS.Domain.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -84,6 +86,35 @@ namespace MextFullstackSaaS.Infrastructure.Services
         public Task<bool> CheckIfEmailVerifiedAsync(string email, CancellationToken cancellationToken)
         {
             return _userManager.Users.AnyAsync(x => x.Email == email && x.EmailConfirmed, cancellationToken);
+        }
+
+        public async Task<JwtDto> SocialLoginAsync(UserAuthSocialLoginCommand command, CancellationToken cancellationToken)
+        {
+            User? user;
+
+            user = await _userManager.FindByEmailAsync(command.Email);
+
+            if (user is null)
+            {
+                user = new User();
+
+                user.Id = Guid.NewGuid();
+                user.UserName = command.Email;
+                user.Email = command.Email;
+                user.EmailConfirmed = true;
+                user.FirstName = command.FirstName;
+                user.LastName = command.LastName;
+                user.CreatedOn=DateTimeOffset.UtcNow;
+                user.CreatedByUserId = user.Id.ToString();
+                user.Balance = new UserBalance()
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = user.Id,
+                    Credits = 0,
+                    CreatedOn = DateTimeOffset.UtcNow,
+                    CreatedByUserId = user.Id.ToString(),
+                };
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ using Google.Apis.Auth.OAuth2.Flows;
 using MediatR;
 using MextFullstackSaaS.Application.Features.UserAuth.Commands.Login;
 using MextFullstackSaaS.Application.Features.UserAuth.Commands.Register;
+using MextFullstackSaaS.Application.Features.UserAuth.Commands.Social_Login;
 using MextFullstackSaaS.Application.Features.UserAuth.Commands.VerifyEmail;
 using MextFullstackSaaS.Domain.Settings;
 using Microsoft.AspNetCore.Mvc;
@@ -60,26 +61,24 @@ public class UsersAuthController : ControllerBase
 
         var payload = await GoogleJsonWebSignature.ValidateAsync(tokenResponse.IdToken);
 
-        var email = payload.Email;
-        var firstName = payload.GivenName;
-        var lastName = payload.FamilyName;
+        var command = new UserAuthSocialLoginCommand(payload.Email, payload.GivenName, payload.FamilyName);
 
-        //var jwtDto =
-        //    await _authenticationService.SocialLoginAsync(userEmail, firstName, lastName, cancellationToken);
+        var responseDto =await _mediatr.Send(command, cancellationToken);
 
-        //var queryParams = new Dictionary<string, string>()
-        //    {
-        //        {"access_token",jwtDto.AccessToken },
-        //        {"expiry_date",jwtDto.ExpiryDate.ToBinary().ToString() },
-        //    };
 
-        //var formContent = new FormUrlEncodedContent(queryParams);
+        var queryParams = new Dictionary<string, string>()
+           {
+               {"access_token",responseDto.Data.Token },
+                {"expiry_date", responseDto.Data.Expires.ToBinary().ToString() },
+            };
+                
+       var formContent = new FormUrlEncodedContent(queryParams);
 
-        //var query = await formContent.ReadAsStringAsync(cancellationToken);
+       var query = await formContent.ReadAsStringAsync(cancellationToken);
 
-        //var redirectUrl = $"http://127.0.0.1:5173/social-login?{query}";
+        var redirectUrl = $"http://localhost:5275/social-login?{query}";//blazor 
 
-        return Redirect($"http://localhost:5275/social-login?email={email}&firstName={firstName}&lastName ={lastName}");
+        return Redirect(redirectUrl);
     }
 
     [HttpPost("register")]
