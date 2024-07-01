@@ -44,7 +44,7 @@ public class OpenAIManager : IOpenAIService
             var responses = await Task.WhenAll(openAITasks);
 
             return responses
-                .SelectMany(response => response.Results.Select(result => result.Url))
+                .SelectMany(response => response.Results.Select(result => result.B64))
                 .ToList();
         }
 
@@ -66,7 +66,7 @@ public class OpenAIManager : IOpenAIService
 
         return imageResult
             .Results
-            .Select(x => x.Url)
+            .Select(x => x.B64)
             .ToList();
 
     }
