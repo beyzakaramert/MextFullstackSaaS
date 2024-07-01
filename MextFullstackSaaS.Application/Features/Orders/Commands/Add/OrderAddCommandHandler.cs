@@ -35,9 +35,7 @@ namespace MextFullstackSaaS.Application.Features.Orders.Commands.Add
                 await _openAiService.DallECreateIconAsync(DallECreateIconRequestDto.MapFromOrderAddCommand(request),
                     cancellationToken);
 
-            order.Urls = await _objectStorageService.UploadImageAsync(base64Images, cancellationToken);
-
-            /* TODO: Make Request to the Gemine or Dall-e 3 */
+            order.Urls = await _objectStorageService.UploadImagesAsync(base64Images, cancellationToken);
 
             _dbContext.Orders.Add(order);
 
@@ -50,7 +48,8 @@ namespace MextFullstackSaaS.Application.Features.Orders.Commands.Add
                 _memoryCache.Set(MemoryCacheHelper.GetOrdersGetAllKey(_currentUserService.UserId), orders, MemoryCacheHelper.GetMemoryCacheEntryOptions());
             }
 
-            await _orderHubService.NewOrderAddedAsync(order.Urls,cancellationToken);
+            await _orderHubService.NewOrderAddedAsync(order.Urls, cancellationToken);
+
             return new ResponseDto<Guid>(order.Id, "Your order completed successfully.");
         }
     }
