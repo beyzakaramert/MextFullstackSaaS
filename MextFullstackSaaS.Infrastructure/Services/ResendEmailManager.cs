@@ -1,9 +1,9 @@
-﻿using System.Web;
-using MextFullstackSaaS.Application.Common.Interfaces;
+﻿using MextFullstackSaaS.Application.Common.Interfaces;
 using MextFullstackSaaS.Application.Common.Models.Emails;
 using MextFullstackSaaS.Application.Common.Translations;
 using Microsoft.Extensions.Localization;
 using Resend;
+using System.Web;
 
 namespace MextFullstackSaaS.Infrastructure.Services;
 
@@ -20,7 +20,12 @@ public class ResendEmailManager : IEmailService
         _localizer = localizer;
     }
 
-    private const string WebAppBaseUrl = "http://localhost:5275/";
+    //blazor çalışma url 
+    private const string WebAppBaseUrl = "http://localhost:5067/";
+
+
+
+
     public async Task SendEmailVerificationAsync(EmailSendEmailVerificationDto emailDto, CancellationToken cancellationToken)
     {
         var encodedEmail = HttpUtility.UrlEncode(emailDto.Email);
@@ -43,27 +48,27 @@ public class ResendEmailManager : IEmailService
         await SendEmailAsync(new EmailSendDto(emailDto.Email, _localizer[CommonTranslationKeys.EmailVerificationSubject], htmlContent), cancellationToken);
     }
 
-    public async Task SendForgotPasswordAsync(EmailSendEmailVerificationDto emailDto, CancellationToken cancellationToken)
+
+
+    public async Task SendEmailResetPasswordAsync(EmailSendResetPasswordDto emailDto, CancellationToken cancellationToken)
     {
         var encodedEmail = HttpUtility.UrlEncode(emailDto.Email);
-
         var encodedToken = HttpUtility.UrlEncode(emailDto.Token);
+        var link = $"{WebAppBaseUrl}UsersAuth/forgot-password?email={encodedEmail}&token={encodedToken}";
 
-        var link = $"{WebAppBaseUrl}UsersAuth/verify-email?email={encodedEmail}&token={encodedToken}";
+        var htmlContent = $"<div><a href=\"{link}\" target=\"_blank\"><strong>Greetings<strong> 👋🏻 from .NET</a></div>";
 
-        var htmlContent =
-            await File.ReadAllTextAsync($"{_rootPathService.GetRootPath()}/email-templates/userauth-template.html", cancellationToken);
-
-        htmlContent = htmlContent.Replace("{{{link}}}", link);
-
-        htmlContent = htmlContent.Replace("{{{subject}}}", "Email Verification");
-
-        htmlContent = htmlContent.Replace("{{{content}}}", "Kindly click the button below to confirm your email address.");
-
-        htmlContent = htmlContent.Replace("{{{buttonText}}}", "Verify Email");
-
-        await SendEmailAsync(new EmailSendDto(emailDto.Email, "Forgot Password", htmlContent), cancellationToken);
+        await SendEmailAsync(new EmailSendDto(emailDto.Email, "Password Reset | IconBuilderAI", htmlContent), cancellationToken);
     }
+
+
+    public async Task SendPasswordChangedNotificationAsync(string email, CancellationToken cancellationToken)
+    {
+        var htmlContent = "<div>Your password has been changed. If you did not initiate this change, please contact our support team immediately.</div>";
+
+        await SendEmailAsync(new EmailSendDto(email, "Password Changed Notification | IconBuilderAI", htmlContent), cancellationToken);
+    }
+
 
     private Task SendEmailAsync(EmailSendDto emailSendDto, CancellationToken cancellationToken)
     {
@@ -78,5 +83,10 @@ public class ResendEmailManager : IEmailService
         message.HtmlBody = emailSendDto.HtmlContent;
 
         return _resend.EmailSendAsync(message, cancellationToken);
+    }
+
+    public Task SendForgotPasswordAsync(EmailSendEmailVerificationDto emailDto, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
     }
 }
