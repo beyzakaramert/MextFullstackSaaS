@@ -1,6 +1,7 @@
 ﻿using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Storage.V1;
 using MextFullstackSaaS.Application.Common.Interfaces;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace MextFullstackSaaS.Infrastructure.Services
 {
@@ -13,6 +14,9 @@ namespace MextFullstackSaaS.Infrastructure.Services
         {
             _credential = GoogleCredential.FromJson("C:\\Users\\beyza\\Desktop\\phrasal-descent-428107-t8-62ee50c59f1e.json");
         }
+
+       
+
         public async Task<string> UploadImageAsync(string imageData, CancellationToken cancellationToken)
         {
             // Convert the base64 string to byte array
@@ -50,6 +54,31 @@ namespace MextFullstackSaaS.Infrastructure.Services
             return results.ToList();
         }
 
+        public async Task<bool> RemoveAsync (string key, CancellationToken cancellationToken)
+        {
+            // Create a new Google Cloud Storage client
+            using var storage = await StorageClient.CreateAsync(_credential);
+
+           //Delete the file from Google Cloud Storage
+           await storage.DeleteObjectAsync(BucketName, key, cancellationToken: cancellationToken);
+
+            return true;
         }
+
+        public async Task<bool> RemoveAsync(List<string> keys, CancellationToken cancellationToken)
+        {
+            // Create a new Google Cloud Storage client
+            using var storage = await StorageClient.CreateAsync(_credential);
+
+            //Delete the file from Google Cloud Storage
+            var deleteTasks = keys
+                .Select(key => storage.DeleteObjectAsync(BucketName, key, cancellationToken: cancellationToken));
+            await Task.WhenAll(deleteTasks);
+            return true;
+
+        }
+
+
+    }
     }
 
