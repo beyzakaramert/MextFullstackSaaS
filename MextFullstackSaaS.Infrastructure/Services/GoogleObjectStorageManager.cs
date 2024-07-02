@@ -2,6 +2,7 @@
 using Google.Cloud.Storage.V1;
 using MextFullstackSaaS.Application.Common.Interfaces;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Net;
 
 namespace MextFullstackSaaS.Infrastructure.Services
 {
@@ -12,11 +13,8 @@ namespace MextFullstackSaaS.Infrastructure.Services
 
         public GoogleObjectStorageManager()
         {
-            _credential = GoogleCredential.FromJson("C:\\Users\\beyza\\Desktop\\phrasal-descent-428107-t8-62ee50c59f1e.json");
+            _credential = GoogleCredential.FromFile("C:\\Users\\beyza\\Desktop\\MextFullStackBootcamp-master\\phrasal-descent-428107-t8-62ee50c59f1e.json");
         }
-
-       
-
         public async Task<string> UploadImageAsync(string imageData, CancellationToken cancellationToken)
         {
             // Convert the base64 string to byte array
@@ -41,44 +39,54 @@ namespace MextFullstackSaaS.Infrastructure.Services
 
             // Return the public URL of the uploaded image
             //return $"https://storage.googleapis.com/{BucketName}/{fileName}";
+            //return $"https://storage.googleapis.com/iconbuilderai-icons-us/{fileName}";
             return fileName;
+
 
         }
 
         public async Task<List<string>> UploadImagesAsync(List<string> imagesData, CancellationToken cancellationToken)
         {
-            var uploadTasks = imagesData.Select(imagesData => UploadImageAsync(imagesData, cancellationToken));
+            var uploadTasks = imagesData.Select(imageData => UploadImageAsync(imageData, cancellationToken));
 
             var results = await Task.WhenAll(uploadTasks);
 
             return results.ToList();
         }
 
-        public async Task<bool> RemoveAsync (string key, CancellationToken cancellationToken)
+        public async Task<bool> RemoveAsync(string key, CancellationToken cancellationToken)
         {
-            // Create a new Google Cloud Storage client
-            using var storage = await StorageClient.CreateAsync(_credential);
+            try
+            {
+                // Create a new Google Cloud Storage client
+                using var storage = await StorageClient.CreateAsync(_credential);
 
-           //Delete the file from Google Cloud Storage
-           await storage.DeleteObjectAsync(BucketName, key, cancellationToken: cancellationToken);
+                // Delete the file from Google Cloud Storage
+                await storage.DeleteObjectAsync(BucketName, key, cancellationToken: cancellationToken);
 
-            return true;
+                return true;
+            }
+            catch (Google.GoogleApiException e) when (e.HttpStatusCode == HttpStatusCode.NotFound)
+            {
+                // Object doesn't exist, which could be considered a successful deletion
+                return true;
+            }
+            catch (Exception)
+            {
+                // Handle or log other exceptions as needed
+                return false;
+            }
         }
 
         public async Task<bool> RemoveAsync(List<string> keys, CancellationToken cancellationToken)
         {
-            // Create a new Google Cloud Storage client
-            using var storage = await StorageClient.CreateAsync(_credential);
+            var removeTasks = keys.Select(key => RemoveAsync(key, cancellationToken));
 
-            //Delete the file from Google Cloud Storage
-            var deleteTasks = keys
-                .Select(key => storage.DeleteObjectAsync(BucketName, key, cancellationToken: cancellationToken));
-            await Task.WhenAll(deleteTasks);
+            await Task.WhenAll(removeTasks);
+
             return true;
-
         }
-
-
     }
-    }
+}
+
 
