@@ -1,15 +1,15 @@
-﻿using System.Net;
-using MextFullstackSaaS.Application.Common.Interfaces;
+﻿using MextFullstackSaaS.Application.Common.Interfaces;
 using MextFullstackSaaS.Application.Common.Models;
 using MextFullstackSaaS.Application.Common.Models.Auth;
 using MextFullstackSaaS.Application.Features.UserAuth.Commands.Login;
 using MextFullstackSaaS.Application.Features.UserAuth.Commands.Register;
+using MextFullstackSaaS.Application.Features.UserAuth.Commands.ResetPassword;
 using MextFullstackSaaS.Application.Features.UserAuth.Commands.Social_Login;
 using MextFullstackSaaS.Application.Features.UserAuth.Commands.VerifyEmail;
-using MextFullstackSaaS.Domain.Entities;
 using MextFullstackSaaS.Domain.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Web;
 
 namespace MextFullstackSaaS.Infrastructure.Services
 {
@@ -49,25 +49,7 @@ namespace MextFullstackSaaS.Infrastructure.Services
 
             return jwtDto;
         }
-        public async Task<JwtDto> SocialLoginAsync(UserAuthSocialLoginCommand command, CancellationToken cancellationToken)
-        {
-            User? user;
 
-            user = await _userManager.FindByEmailAsync(command.Email);
-
-            if (user is null)
-            {
-                user = UserAuthSocialLoginCommand.ToUser(command);
-
-                var result = await _userManager.CreateAsync(user);
-
-                if (!result.Succeeded)                
-                    throw new Exception("User registration failed");
-                
-            }
-
-            return await _jwtService.GenerateTokenAsync(user.Id,user.Email, cancellationToken);
-        }
         public async Task<bool> IsEmailExistsAsync(string email, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByEmailAsync(email);
@@ -106,6 +88,65 @@ namespace MextFullstackSaaS.Infrastructure.Services
             return _userManager.Users.AnyAsync(x => x.Email == email && x.EmailConfirmed, cancellationToken);
         }
 
-        
+        public async Task<UserAuthResetPasswordResponseDto> ForgotPasswordAsync(string email, CancellationToken cancellationToken)
+        {
+
+            var user = await _userManager.FindByEmailAsync(email);
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            return new UserAuthResetPasswordResponseDto(user.Id, user.Email, user.FirstName, token);
+
+        }
+
+        public async Task<bool> ResetPasswordAsync(UserAuthResetPasswordCommand command, CancellationToken cancellationToken)
+        {
+            var user = await _userManager.FindByEmailAsync(command.Email);
+            var decodedToken = HttpUtility.UrlDecode(command.Token);
+
+
+            var result = await _userManager.ResetPasswordAsync(user, decodedToken, command.Password);
+            if (!result.Succeeded)
+            {
+                throw new Exception("Password reset failed");
+            }
+
+
+
+            return true;
+        }
+
+        public async Task<bool> ChangePasswordAsync(Guid userId, string currentPassword, string newPassword, CancellationToken cancellationToken)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+            if (!result.Succeeded)
+            {
+                throw new Exception("Password change failed");
+            }
+
+            return true;
+
+
+        }
+
+        public async Task<JwtDto> SocialLoginAsync(UserAuthSocialLoginCommand command, CancellationToken cancellationToken)
+        {
+            User? user;
+
+            user = await _userManager.FindByEmailAsync(command.Email);
+
+            if (user is null)
+            {
+                user = UserAuthSocialLoginCommand.ToUser(command);
+
+                var result = await _userManager.CreateAsync(user);
+
+                if (!result.Succeeded)
+                    throw new Exception("User registration failed");
+            }
+
+            return await _jwtService.GenerateTokenAsync(user.Id, user.Email, cancellationToken);
+        }
     }
 }
