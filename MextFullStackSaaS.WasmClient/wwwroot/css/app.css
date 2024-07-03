@@ -849,6 +849,24 @@ html {
   }
 }
 
+.avatar {
+  position: relative;
+  display: inline-flex;
+}
+
+.avatar > div {
+  display: block;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+}
+
+.avatar img {
+  height: 100%;
+  width: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
 .avatar.placeholder > div {
   display: flex;
   align-items: center;
@@ -1513,6 +1531,30 @@ html {
   opacity: 1;
 }
 
+.toggle {
+  flex-shrink: 0;
+  --tglbg: var(--fallback-b1,oklch(var(--b1)/1));
+  --handleoffset: 1.5rem;
+  --handleoffsetcalculator: calc(var(--handleoffset) * -1);
+  --togglehandleborder: 0 0;
+  height: 1.5rem;
+  width: 3rem;
+  cursor: pointer;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  border-radius: var(--rounded-badge, 1.9rem);
+  border-width: 1px;
+  border-color: currentColor;
+  background-color: currentColor;
+  color: var(--fallback-bc,oklch(var(--bc)/0.5));
+  transition: background,
+    box-shadow var(--animation-input, 0.2s) ease-out;
+  box-shadow: var(--handleoffsetcalculator) 0 0 2px var(--tglbg) inset,
+    0 0 0 2px var(--tglbg) inset,
+    var(--togglehandleborder);
+}
+
 .alert-success {
   border-color: var(--fallback-su,oklch(var(--su)/0.2));
   --tw-text-opacity: 1;
@@ -1527,6 +1569,14 @@ html {
   color: var(--fallback-erc,oklch(var(--erc)/var(--tw-text-opacity)));
   --alert-bg: var(--fallback-er,oklch(var(--er)/1));
   --alert-bg-mix: var(--fallback-b1,oklch(var(--b1)/1));
+}
+
+.avatar-group :where(.avatar) {
+  overflow: hidden;
+  border-radius: 9999px;
+  border-width: 4px;
+  --tw-border-opacity: 1;
+  border-color: var(--fallback-b1,oklch(var(--b1)/var(--tw-border-opacity)));
 }
 
 .btm-nav > *.disabled,
@@ -1568,6 +1618,10 @@ html {
 
   .btn-secondary {
     --btn-color: var(--fallback-s);
+  }
+
+  .btn-accent {
+    --btn-color: var(--fallback-a);
   }
 
   .btn-info {
@@ -1633,6 +1687,10 @@ html {
     --btn-color: var(--s);
   }
 
+  .btn-accent {
+    --btn-color: var(--a);
+  }
+
   .btn-info {
     --btn-color: var(--in);
   }
@@ -1642,6 +1700,12 @@ html {
   --tw-text-opacity: 1;
   color: var(--fallback-sc,oklch(var(--sc)/var(--tw-text-opacity)));
   outline-color: var(--fallback-s,oklch(var(--s)/1));
+}
+
+.btn-accent {
+  --tw-text-opacity: 1;
+  color: var(--fallback-ac,oklch(var(--ac)/var(--tw-text-opacity)));
+  outline-color: var(--fallback-a,oklch(var(--a)/1));
 }
 
 .btn-info {
@@ -2225,6 +2289,78 @@ details.collapse summary::-webkit-details-marker {
   }
 }
 
+[dir="rtl"] .toggle {
+  --handleoffsetcalculator: calc(var(--handleoffset) * 1);
+}
+
+.toggle:focus-visible {
+  outline-style: solid;
+  outline-width: 2px;
+  outline-offset: 2px;
+  outline-color: var(--fallback-bc,oklch(var(--bc)/0.2));
+}
+
+.toggle:hover {
+  background-color: currentColor;
+}
+
+.toggle:checked,
+  .toggle[aria-checked="true"] {
+  background-image: none;
+  --handleoffsetcalculator: var(--handleoffset);
+  --tw-text-opacity: 1;
+  color: var(--fallback-bc,oklch(var(--bc)/var(--tw-text-opacity)));
+}
+
+[dir="rtl"] .toggle:checked, [dir="rtl"] .toggle[aria-checked="true"] {
+  --handleoffsetcalculator: calc(var(--handleoffset) * -1);
+}
+
+.toggle:indeterminate {
+  --tw-text-opacity: 1;
+  color: var(--fallback-bc,oklch(var(--bc)/var(--tw-text-opacity)));
+  box-shadow: calc(var(--handleoffset) / 2) 0 0 2px var(--tglbg) inset,
+      calc(var(--handleoffset) / -2) 0 0 2px var(--tglbg) inset,
+      0 0 0 2px var(--tglbg) inset;
+}
+
+[dir="rtl"] .toggle:indeterminate {
+  box-shadow: calc(var(--handleoffset) / 2) 0 0 2px var(--tglbg) inset,
+        calc(var(--handleoffset) / -2) 0 0 2px var(--tglbg) inset,
+        0 0 0 2px var(--tglbg) inset;
+}
+
+.toggle:disabled {
+  cursor: not-allowed;
+  --tw-border-opacity: 1;
+  border-color: var(--fallback-bc,oklch(var(--bc)/var(--tw-border-opacity)));
+  background-color: transparent;
+  opacity: 0.3;
+  --togglehandleborder: 0 0 0 3px var(--fallback-bc,oklch(var(--bc)/1)) inset,
+      var(--handleoffsetcalculator) 0 0 3px var(--fallback-bc,oklch(var(--bc)/1)) inset;
+}
+
+.btn-sm {
+  height: 2rem;
+  min-height: 2rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  font-size: 0.875rem;
+}
+
+.btn-square:where(.btn-sm) {
+  height: 2rem;
+  width: 2rem;
+  padding: 0px;
+}
+
+.btn-circle:where(.btn-sm) {
+  height: 2rem;
+  width: 2rem;
+  border-radius: 9999px;
+  padding: 0px;
+}
+
 .menu-horizontal {
   display: inline-flex;
   flex-direction: row;
@@ -2232,6 +2368,40 @@ details.collapse summary::-webkit-details-marker {
 
 .menu-horizontal > li:not(.menu-title) > details > ul {
   position: absolute;
+}
+
+.avatar.online:before {
+  content: "";
+  position: absolute;
+  z-index: 10;
+  display: block;
+  border-radius: 9999px;
+  --tw-bg-opacity: 1;
+  background-color: var(--fallback-su,oklch(var(--su)/var(--tw-bg-opacity)));
+  outline-style: solid;
+  outline-width: 2px;
+  outline-color: var(--fallback-b1,oklch(var(--b1)/1));
+  width: 15%;
+  height: 15%;
+  top: 7%;
+  right: 7%;
+}
+
+.avatar.offline:before {
+  content: "";
+  position: absolute;
+  z-index: 10;
+  display: block;
+  border-radius: 9999px;
+  --tw-bg-opacity: 1;
+  background-color: var(--fallback-b3,oklch(var(--b3)/var(--tw-bg-opacity)));
+  outline-style: solid;
+  outline-width: 2px;
+  outline-color: var(--fallback-b1,oklch(var(--b1)/1));
+  width: 15%;
+  height: 15%;
+  top: 7%;
+  right: 7%;
 }
 
 .card-compact .card-body {
@@ -2511,6 +2681,10 @@ details.collapse summary::-webkit-details-marker {
   width: 1.5rem;
 }
 
+.w-96 {
+  width: 24rem;
+}
+
 .w-\[200px\] {
   width: 200px;
 }
@@ -2634,6 +2808,10 @@ details.collapse summary::-webkit-details-marker {
 
 .gap-6 {
   gap: 1.5rem;
+}
+
+.gap-8 {
+  gap: 2rem;
 }
 
 .space-x-2 > :not([hidden]) ~ :not([hidden]) {
@@ -2961,6 +3139,12 @@ details.collapse summary::-webkit-details-marker {
 .shadow {
   --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.shadow-2xl {
+  --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 

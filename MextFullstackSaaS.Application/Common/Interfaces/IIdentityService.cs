@@ -5,6 +5,7 @@ using MextFullstackSaaS.Application.Features.UserAuth.Commands.Login;
 using MextFullstackSaaS.Application.Features.UserAuth.Commands.VerifyEmail;
 using MextFullstackSaaS.Application.Features.UserAuth.Commands.Social_Login;
 using MextFullstackSaaS.Application.Features.UserAuth.Commands.ResetPassword;
+using MextFullstackSaaS.Application.Features.Users.Queries.GetProfile;
 
 namespace MextFullstackSaaS.Application.Common.Interfaces
 {
@@ -17,12 +18,12 @@ namespace MextFullstackSaaS.Application.Common.Interfaces
         Task<bool> CheckPasswordSignInAsync(string email, string password, CancellationToken cancellationToken);
         Task<bool> VerifyEmailAsync(UserAuthVerifyEmailCommand command, CancellationToken cancellationToken);
         Task<bool> CheckIfEmailVerifiedAsync(string email, CancellationToken cancellationToken);
-
         Task<UserAuthResetPasswordResponseDto> ForgotPasswordAsync(string email, CancellationToken cancellationToken);
-
         Task<bool> ResetPasswordAsync(UserAuthResetPasswordCommand command, CancellationToken cancellationToken);
-
         Task<bool> ChangePasswordAsync(Guid userId, string currentPassword, string newPassword, CancellationToken cancellationToken);
+        Task<UserGetProfileDto> GetProfileAsync(CancellationToken cancellationToken);
+
+
 
     }
 }
