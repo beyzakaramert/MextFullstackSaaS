@@ -80,10 +80,12 @@ namespace MextFullstackSaaS.Application.Features.Orders.Commands.Add
                 Type = UserBalanceHistoryType.DeductCredits
             };
 
-            userBalance.Histories.Add(history);
+            //userBalance.Histories.Add(history);
 
             _dbContext.UserBalances.Update(userBalance);
-            //_dbContext.UserBalanceHistories.Add(userBalance);
+           
+            _dbContext.UserBalanceHistories.Add(history);
+
         }
     }
 }

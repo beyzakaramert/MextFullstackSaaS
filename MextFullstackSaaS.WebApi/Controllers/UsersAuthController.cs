@@ -5,6 +5,7 @@ using MediatR;
 using MextFullstackSaaS.Application.Features.UserAuth.Commands.Login;
 using MextFullstackSaaS.Application.Features.UserAuth.Commands.Register;
 using MextFullstackSaaS.Application.Features.UserAuth.Commands.Social_Login;
+using MextFullstackSaaS.Application.Features.UserAuth.Commands.SocialLogin;
 using MextFullstackSaaS.Application.Features.UserAuth.Commands.VerifyEmail;
 using MextFullstackSaaS.Domain.Settings;
 using Microsoft.AspNetCore.Mvc;

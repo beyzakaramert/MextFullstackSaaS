@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using MextFullstackSaaS.Application.Common.Interfaces;
 using MextFullstackSaaS.Application.Common.Models;
+using MextFullstackSaaS.Application.Features.UserAuth.Commands.SocialLogin;
 
 namespace MextFullstackSaaS.Application.Features.UserAuth.Commands.Social_Login
 {

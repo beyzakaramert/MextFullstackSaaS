@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using MextFullstackSaaS.Application.Common.FluentValidation.BaseValidators;
 using MextFullstackSaaS.Application.Common.Interfaces;
+using MextFullstackSaaS.Application.Features.UserAuth.Commands.SocialLogin;
 
 namespace MextFullstackSaaS.Application.Features.UserAuth.Commands.Social_Login
 {

@@ -49,6 +49,7 @@ namespace MextFullstackSaaS.Application.Features.Orders.Commands.Add
             RuleFor(x => x.Size)
                 .Must(IsUserIdValid)
                 .WithMessage("You need to be logged-in to place an order.");
+
             RuleFor(x => x)
                 .MustAsync(HasCreditAsync)
                 .WithMessage("You need to have at least 1 credit to place an order.");
