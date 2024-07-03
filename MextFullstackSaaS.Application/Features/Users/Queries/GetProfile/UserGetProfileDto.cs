@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MextFullstackSaaS.Domain.Identity;
 
 namespace MextFullstackSaaS.Application.Features.Users.Queries.GetProfile
 {
@@ -16,11 +12,12 @@ namespace MextFullstackSaaS.Application.Features.Users.Queries.GetProfile
         public decimal Credits { get; set; }
         public string PhoneNumber { get; set; }
 
-        public static UserGetProfileDto Map(UserGetProfileDto user)
+
+
+        public static UserGetProfileDto Map(User user)
         {
             return new UserGetProfileDto
             {
-
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 UserName = user.UserName,
@@ -29,7 +26,6 @@ namespace MextFullstackSaaS.Application.Features.Users.Queries.GetProfile
                 Credits = user.Balance.Credits,
                 PhoneNumber = user.PhoneNumber
             };
-
         }
     }
 }

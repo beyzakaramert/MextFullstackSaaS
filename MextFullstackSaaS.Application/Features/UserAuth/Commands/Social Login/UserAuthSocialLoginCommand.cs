@@ -12,6 +12,7 @@ namespace MextFullstackSaaS.Application.Features.UserAuth.Commands.Social_Login
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
+        public string ? ProfileImage {  get; set; }
 
         public UserAuthSocialLoginCommand(string email, string firstName,string lastName) 
         {
@@ -21,6 +22,18 @@ namespace MextFullstackSaaS.Application.Features.UserAuth.Commands.Social_Login
             FirstName = firstName;
 
             LastName = lastName;        
+        }
+
+        public UserAuthSocialLoginCommand(string email, string firstName, string lastName, string profileimage)
+        {
+
+            Email = email;
+
+            FirstName = firstName;
+
+            LastName = lastName;
+
+            ProfileImage = profileimage;
         }
 
         public UserAuthSocialLoginCommand() 
@@ -42,6 +55,7 @@ namespace MextFullstackSaaS.Application.Features.UserAuth.Commands.Social_Login
                 CreatedOn = DateTimeOffset.UtcNow,
                 CreatedByUserId = id.ToString(),
                 EmailConfirmed = true,
+                ProfileImage = command.ProfileImage,
                 Balance = new UserBalance()
                 {
                     Id = Guid.NewGuid(),
