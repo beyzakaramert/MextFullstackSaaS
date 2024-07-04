@@ -34,7 +34,7 @@ namespace MextFullstackSaaS.Infrastructure.Services
                 Currency = Currency.TRY.ToString(),
                 BasketId = "B123456",
                 PaymentGroup = PaymentGroup.PRODUCT.ToString(),
-                CallbackUrl = $"http://localhost:5275/payment-success?conversationId={conversationId}"
+                CallbackUrl = $"http://localhost:5121/api/Payments/payment-result/"//swagger
             };
 
             List<int> enabledInstallments = new List<int>();

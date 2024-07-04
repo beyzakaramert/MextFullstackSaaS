@@ -21,5 +21,11 @@ namespace MextFullstackSaaS.WebApi.Controllers
         {
             return Ok(await _mediator.Send(new PaymentsCreatePaymentFormCommand(), cancellationToken));
         }
+
+        [HttpPost("PaymentResult")]
+        public async Task<IActionResult> PaymentResultAsync(string token, CancellationToken cancellationToken)
+        {
+            return Redirect($"http://localhost:5275/payment-success?token={token}");//blazor
+        }
     }
 }
