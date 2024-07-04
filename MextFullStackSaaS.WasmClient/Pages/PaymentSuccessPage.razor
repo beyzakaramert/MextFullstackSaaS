@@ -1,5 +1,9 @@
-﻿<h3>PaymentSuccessPage</h3>
+﻿@page "/payment-success"
+
+<h2>ConversationId</h2>
 
 @code {
 
+    [SupplyParameterFromQuery(Name = "conversationId")]
+    [Parameter] public string ConversationId { get; set; }
 }
