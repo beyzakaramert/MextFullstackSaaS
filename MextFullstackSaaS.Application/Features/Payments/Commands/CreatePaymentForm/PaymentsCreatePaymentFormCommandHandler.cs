@@ -2,6 +2,9 @@
 using MextFullstackSaaS.Application.Common.Interfaces;
 using MextFullstackSaaS.Application.Common.Models;
 using MextFullstackSaaS.Application.Common.Models.Payments;
+using MextFullstackSaaS.Domain.Entities;
+using MextFullstackSaaS.Domain.Enums;
+using MextFullstackSaaS.Domain.ValueObjects;
 
 namespace MextFullstackSaaS.Application.Features.Payments.Commands.CreatePaymentForm
 {
@@ -26,9 +29,43 @@ namespace MextFullstackSaaS.Application.Features.Payments.Commands.CreatePayment
 
             var userRequest = new PaymentsCreateCheckoutFormRequest(paymentDetail, request.Credits);
 
-            var response = await _paymentService.CreateCheckoutFormAsync(userRequest, cancellationToken);
+            var checkoutFormResponse =  _paymentService.CreateCheckoutForm(userRequest);
+
+
 
             return new ResponseDto<PaymentsCreatePaymentFormDto>();
+        }
+
+        private UserPayment MapUserPayment(UserPaymentDetail paymentDetail, PaymentsCreateCheckoutFormResponse checkoutFromResponse)
+        {
+            var userPaymentId = Guid.NewGuid();
+
+            return new UserPayment()
+            {
+                Id = userPaymentId,
+                UserId = _currentUserService.UserId,
+                BasketId = checkoutFromResponse.BasketId,
+                Price = checkoutFromResponse.Price,
+                PaidPrice = checkoutFromResponse.PaidPrice,
+                CurrencyCode = CurrencyCode.TRY,
+                CreatedOn = DateTimeOffset.UtcNow,
+                Token = checkoutFromResponse.Token,
+                UserPaymentDetail = paymentDetail,
+                Status = PaymentStatus.Initiated,
+                CreatedByUserId = _currentUserService.UserId.ToString(),
+                Histories = new List<UserPaymentHistory>()
+                {
+                    new UserPaymentHistory()
+                    {
+                        Id = Guid.NewGuid(),
+                        Status = PaymentStatus.Initiated,
+                        UserPaymentId = userPaymentId,
+                        ConversationId = checkoutFromResponse?.ConversationId,
+                        CreatedOn = DateTimeOffset.UtcNow,
+                        CreatedByUserId = _currentUserService.UserId.ToString(),
+                    }
+                }
+            };
         }
     }
 }

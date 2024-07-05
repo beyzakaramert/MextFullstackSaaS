@@ -28,7 +28,7 @@ namespace MextFullstackSaaS.Infrastructure.Services
         }
         private const int OneCreditPrice = 10;
         private const string CallbackUrl = "http://localhost:5121/api/Payments/payment-result/";//swagger
-        public async Task<object> CreateCheckoutFormAsync(PaymentsCreateCheckoutFormRequest userRequest, CancellationToken cancellationToken)
+        public PaymentsCreateCheckoutFormResponse CreateCheckoutForm(PaymentsCreateCheckoutFormRequest userRequest)
         {
             var price = userRequest.Credits * OneCreditPrice;
             var paidPrice = price;
@@ -105,9 +105,24 @@ namespace MextFullstackSaaS.Infrastructure.Services
 
             CheckoutFormInitialize checkoutFormInitialize = CheckoutFormInitialize.Create(request, _options);
 
-            checkoutFormInitialize.
+            //Check the response if it is not successful throw an exception
 
-            return checkoutFormInitialize;
+            return MapCheckoutFormInitializeResponse(checkoutFormInitialize,price,paidPrice,conversationId,basketId);
+        }
+
+        private PaymentsCreateCheckoutFormResponse MapCheckoutFormInitializeResponse(CheckoutFormInitialize checkoutFormInitialize, decimal price, decimal paidPrice, string conversationId, string basketId)
+        {
+            return new PaymentsCreateCheckoutFormResponse
+            {
+                Price = price,
+                PaidPrice = paidPrice,
+                ConversationId = conversationId,
+                BasketId = basketId,
+                Token = checkoutFormInitialize.Token,
+                TokenExpireTime = checkoutFormInitialize.TokenExpireTime,
+                CheckoutFormContent = checkoutFormInitialize.CheckoutFormContent,
+                PaymentPageUrl = checkoutFormInitialize.PaymentPageUrl
+            };
         }
     }
 }
