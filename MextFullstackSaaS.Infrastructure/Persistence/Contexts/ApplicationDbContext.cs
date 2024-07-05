@@ -20,7 +20,7 @@ namespace MextFullstackSaaS.Infrastructure.Persistence.Contexts
 
         public DbSet<UserPayment> UserPayments { get; set; }
 
-        public DbSet<UserPaymentHistory> UserPaymentsHistories { get; set; }
+        public DbSet<UserPaymentHistory> UserPaymentHistories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

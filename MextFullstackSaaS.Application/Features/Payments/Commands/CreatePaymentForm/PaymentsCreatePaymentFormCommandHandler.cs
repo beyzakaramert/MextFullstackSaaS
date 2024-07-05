@@ -13,12 +13,14 @@ namespace MextFullstackSaaS.Application.Features.Payments.Commands.CreatePayment
         private readonly IPaymentService _paymentService;
         private readonly ICurrentUserService _currentUserService;
         private readonly IIdentityService _identityService;
+        private readonly IApplicationDbContext _applicationDbContext;
 
-        public PaymentsCreatePaymentFormCommandHandler(IPaymentService paymentService, ICurrentUserService currentUserService , IIdentityService identityService)
+        public PaymentsCreatePaymentFormCommandHandler(IPaymentService paymentService, ICurrentUserService currentUserService, IIdentityService identityService, IApplicationDbContext applicationDbContext)
         {
             _paymentService = paymentService;
             _currentUserService = currentUserService;
             _identityService = identityService;
+            _applicationDbContext = applicationDbContext;
         }
 
         public async Task<ResponseDto<PaymentsCreatePaymentFormDto>> Handle(PaymentsCreatePaymentFormCommand request, CancellationToken cancellationToken)
@@ -29,14 +31,19 @@ namespace MextFullstackSaaS.Application.Features.Payments.Commands.CreatePayment
 
             var userRequest = new PaymentsCreateCheckoutFormRequest(paymentDetail, request.Credits);
 
-            var checkoutFormResponse =  _paymentService.CreateCheckoutForm(userRequest);
+            var checkoutFormResponse = _paymentService.CreateCheckoutForm(userRequest);
 
+            var userPayment = MapUserPayment(paymentDetail, checkoutFormResponse);
 
+            _applicationDbContext.UserPayments.Add(userPayment);
+
+            await _applicationDbContext.SaveChangesAsync(cancellationToken);
 
             return new ResponseDto<PaymentsCreatePaymentFormDto>();
         }
 
-        private UserPayment MapUserPayment(UserPaymentDetail paymentDetail, PaymentsCreateCheckoutFormResponse checkoutFromResponse)
+        private UserPayment MapUserPayment(UserPaymentDetail paymentDetail,
+            PaymentsCreateCheckoutFormResponse checkoutFormResponse)
         {
             var userPaymentId = Guid.NewGuid();
 
@@ -44,12 +51,12 @@ namespace MextFullstackSaaS.Application.Features.Payments.Commands.CreatePayment
             {
                 Id = userPaymentId,
                 UserId = _currentUserService.UserId,
-                BasketId = checkoutFromResponse.BasketId,
-                Price = checkoutFromResponse.Price,
-                PaidPrice = checkoutFromResponse.PaidPrice,
+                BasketId = checkoutFormResponse.BasketId,
+                Price = checkoutFormResponse.Price,
+                PaidPrice = checkoutFormResponse.PaidPrice,
                 CurrencyCode = CurrencyCode.TRY,
                 CreatedOn = DateTimeOffset.UtcNow,
-                Token = checkoutFromResponse.Token,
+                Token = checkoutFormResponse.Token,
                 UserPaymentDetail = paymentDetail,
                 Status = PaymentStatus.Initiated,
                 CreatedByUserId = _currentUserService.UserId.ToString(),
@@ -60,7 +67,7 @@ namespace MextFullstackSaaS.Application.Features.Payments.Commands.CreatePayment
                         Id = Guid.NewGuid(),
                         Status = PaymentStatus.Initiated,
                         UserPaymentId = userPaymentId,
-                        ConversationId = checkoutFromResponse?.ConversationId,
+                        ConversationId = checkoutFormResponse.ConversationId,
                         CreatedOn = DateTimeOffset.UtcNow,
                         CreatedByUserId = _currentUserService.UserId.ToString(),
                     }
