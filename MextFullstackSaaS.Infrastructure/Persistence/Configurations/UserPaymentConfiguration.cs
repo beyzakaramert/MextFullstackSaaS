@@ -1,11 +1,20 @@
-﻿using MextFullstackSaaS.Domain.Entities;
+﻿using System.Text.Json;
+using MextFullstackSaaS.Domain.Entities;
+using MextFullstackSaaS.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace MextFullstackSaaS.Infrastructure.Persistence.Configurations
 {
     public class UserPaymentConfiguration : IEntityTypeConfiguration<UserPayment>
     {
+        private static readonly JsonSerializerOptions _options = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            WriteIndented = false
+        };
+
         public void Configure(EntityTypeBuilder<UserPayment> builder)
         {
             // ID
@@ -72,6 +81,17 @@ namespace MextFullstackSaaS.Infrastructure.Persistence.Configurations
             builder.Property(user => user.ModifiedByUserId)
                 .HasMaxLength(100)
                 .IsRequired(false);
+
+
+            builder.Property(e => e.UserPaymentDetail)
+                .HasConversion(
+                    v => JsonSerializer.Serialize(v, _options),
+                    v => JsonSerializer.Deserialize<UserPaymentDetail>(v, _options),
+                    new ValueComparer<UserPaymentDetail>(
+                        (c1, c2) => JsonSerializer.Serialize(c1, _options) == JsonSerializer.Serialize(c2, _options),
+                        c => c == null ? 0 : JsonSerializer.Serialize(c, _options).GetHashCode(),
+                        c => c == null ? null : JsonSerializer.Deserialize<UserPaymentDetail>(JsonSerializer.Serialize(c, _options), _options)))
+                .HasColumnType("jsonb");
 
             // Relationships
 
