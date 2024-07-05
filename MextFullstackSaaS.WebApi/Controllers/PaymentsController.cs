@@ -24,14 +24,14 @@ namespace MextFullstackSaaS.WebApi.Controllers
         }
 
         [HttpPost("complete-payment")]
-        public async Task<IActionResult> PaymentResultAsync([FromForm]string token, CancellationToken cancellationToken)
+        public async Task<IActionResult> PaymentResultAsync([FromForm] string token, CancellationToken cancellationToken)
         {
             var response = await _mediator.Send(new PaymentsCompletePaymentCommand(token), cancellationToken);
 
             if (!response.Data)
                 return Redirect($"http://localhost:5275/payment-failed");
 
-            return Redirect($"http://localhost:5275/payment-success");//blazor
+            return Redirect($"http://localhost:5275/payment-success?message={response.Message}");//blazor
         }
     }
 }

@@ -1,9 +1,18 @@
-﻿@page "/payment-success"
+﻿page "/payment-success"
+@using MextFullStackSaaS.WasmClient.Services
+@inject IToasterService ToasterService
 
-<h2>ConversationId</h2>
+<h2>@Message</h2>
 
 @code {
+    [SupplyParameterFromQuery(Name = "message")]
+    [Parameter] public string Message { get; set; }
 
-    [SupplyParameterFromQuery(Name = "conversationId")]
-    [Parameter] public string Token { get; set; }
+    protected override void OnInitialized()
+    {
+        ToasterService.ShowSuccess(Message);
+
+        base.OnInitialized();
+    }
+
 }

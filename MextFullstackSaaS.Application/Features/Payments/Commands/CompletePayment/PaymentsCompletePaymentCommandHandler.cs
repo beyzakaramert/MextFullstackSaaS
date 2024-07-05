@@ -5,6 +5,7 @@ using MextFullstackSaaS.Application.Common.Models.Payments;
 using MextFullstackSaaS.Domain.Entities;
 using MextFullstackSaaS.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
+using System.Web;
 
 namespace MextFullstackSaaS.Application.Features.Payments.Commands.CompletePayment
 {
@@ -27,20 +28,55 @@ namespace MextFullstackSaaS.Application.Features.Payments.Commands.CompletePayme
 
             var checkResponse = _paymentService.CheckPaymentByToken(request.Token);
 
-            UpdateUserPayment(ref userPayment);
+            UpdateUserPayment(ref userPayment, checkResponse.IsSuccess);
 
             var userPaymentHistory = CreateUserPaymentHistory(userPayment, checkResponse);
 
             _applicationDbContext.UserPaymentHistories.Add(userPaymentHistory);
 
+            if (checkResponse.IsSuccess)
+                await UpdateUserBalanceAsync(amount: 10, userPayment.UserId, cancellationToken);
+
             await _applicationDbContext.SaveChangesAsync(cancellationToken);
 
-            return new ResponseDto<bool>(checkResponse.IsSuccess, "Your payment process has been successful!");
+            var message = "Your payment process has been successful!";
+
+            return new ResponseDto<bool>(checkResponse.IsSuccess, HttpUtility.UrlEncode(message));
         }
 
-        private void UpdateUserPayment(ref UserPayment userPayment)
+        private async Task UpdateUserBalanceAsync(int amount, Guid userId, CancellationToken cancellationToken)
         {
-            userPayment.Status = PaymentStatus.Success;
+
+
+            var userBalance = await _applicationDbContext
+                .UserBalances
+                .FirstOrDefaultAsync(x => x.UserId == userId, cancellationToken);
+
+            userBalance.Credits += amount;
+            userBalance.ModifiedByUserId = userId.ToString();
+            userBalance.ModifiedOn = DateTimeOffset.UtcNow;
+
+            _applicationDbContext.UserBalances.Update(userBalance);
+
+            var userBalanceHistory = new UserBalanceHistory
+            {
+                Id = Guid.NewGuid(),
+                UserBalanceId = userBalance.Id,
+                Amount = amount,
+                CreatedByUserId = userId.ToString(),
+                CreatedOn = DateTimeOffset.UtcNow,
+                CurrentCredits = userBalance.Credits - amount,
+                PreviousCredits = userBalance.Credits,
+                Type = UserBalanceHistoryType.AddCredits
+            };
+
+            _applicationDbContext.UserBalanceHistories.Add(userBalanceHistory);
+
+        }
+
+        private void UpdateUserPayment(ref UserPayment userPayment, bool isPaymentSuccess)
+        {
+            userPayment.Status = isPaymentSuccess ? PaymentStatus.Success : PaymentStatus.Failed;
             userPayment.ModifiedByUserId = userPayment.UserId.ToString();
             userPayment.ModifiedOn = DateTimeOffset.UtcNow;
 
