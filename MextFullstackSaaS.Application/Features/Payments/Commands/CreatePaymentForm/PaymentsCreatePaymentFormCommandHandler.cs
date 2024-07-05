@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using MextFullstackSaaS.Application.Common.Interfaces;
 using MextFullstackSaaS.Application.Common.Models;
+using MextFullstackSaaS.Application.Common.Models.Payments;
 
 namespace MextFullstackSaaS.Application.Features.Payments.Commands.CreatePaymentForm
 {
@@ -23,7 +24,11 @@ namespace MextFullstackSaaS.Application.Features.Payments.Commands.CreatePayment
 
             var paymentDetail = userProfile.MapToPaymentDetail();
 
-            return _paymentService.CreateCheckoutFormAsync(cancellationToken);
+            var userRequest = new PaymentsCreateCheckoutFormRequest(paymentDetail, request.Credits);
+
+            var response = await _paymentService.CreateCheckoutFormAsync(userRequest, cancellationToken);
+
+            return new ResponseDto<PaymentsCreatePaymentFormDto>();
         }
     }
 }
