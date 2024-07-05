@@ -39,7 +39,9 @@ namespace MextFullstackSaaS.Application.Features.Payments.Commands.CreatePayment
 
             await _applicationDbContext.SaveChangesAsync(cancellationToken);
 
-            return new ResponseDto<PaymentsCreatePaymentFormDto>();
+            var response = new PaymentsCreatePaymentFormDto(checkoutFormResponse.PaymentPageUrl);
+
+            return new ResponseDto<PaymentsCreatePaymentFormDto>(response);
         }
 
         private UserPayment MapUserPayment(UserPaymentDetail paymentDetail,

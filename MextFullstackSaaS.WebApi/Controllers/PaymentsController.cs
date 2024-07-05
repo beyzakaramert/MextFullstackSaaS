@@ -17,9 +17,9 @@ namespace MextFullstackSaaS.WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreatePaymentFormAsync(CancellationToken cancellationToken)
+        public async Task<IActionResult> CreatePaymentFormAsync(PaymentsCreatePaymentFormCommand command, CancellationToken cancellationToken)
         {
-            return Ok(await _mediator.Send(new PaymentsCreatePaymentFormCommand(), cancellationToken));
+            return Ok(await _mediator.Send(command, cancellationToken));
         }
 
         [HttpPost("PaymentResult")]

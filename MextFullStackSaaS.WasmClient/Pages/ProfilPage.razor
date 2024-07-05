@@ -2,6 +2,7 @@
 @layout MainLayout
 @using MextFullstackSaaS.Application
 @using MextFullstackSaaS.Application.Common.Models
+@using MextFullstackSaaS.Application.Features.Payments.Commands.CreatePaymentForm
 @using MextFullstackSaaS.Application.Features.Users.Queries.GetProfile
 @using Microsoft.AspNetCore.Components.Authorization
 @inject HttpClient HttpClient
@@ -12,7 +13,7 @@
         <Authorized>
             @if (userProfile is null)
             {
-                <Loading />
+                <Loading/>
             }
             else
             {
@@ -34,7 +35,7 @@
                     </div>
 
                     <div class="card-actions mb-3 justify-center gap-8 pb-2">
-                        <button class="btn btn-warning">Buy Credits</button>
+                        <button class="btn btn-warning" @onclick="HandleBuyCreditsClick">Buy Credits</button>
                         <button class="btn btn-info">Edit Profile</button>
                     </div>
                 </div>
@@ -90,4 +91,22 @@
 
         return userProfile.ProfileImage;
     }
-}
+
+    private async Task HandleBuyCreditsClick()
+    {
+        var command = new PaymentsCreatePaymentFormCommand() { Credits = 10 };
+
+        var response = await HttpClient.PostAsJsonAsync("Payments", command);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var responseDto = await response.Content.ReadFromJsonAsync<ResponseDto<PaymentsCreatePaymentFormDto>>();
+
+            NavigationManager.NavigateTo(responseDto.Data.PaymentPageUrl);
+        }
+        else
+        {
+            Console.WriteLine($"Error buying credits: {response.StatusCode}");
+        }
+    }
+  }
