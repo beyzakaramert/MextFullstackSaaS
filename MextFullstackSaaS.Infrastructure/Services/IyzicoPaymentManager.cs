@@ -11,10 +11,15 @@ namespace MextFullstackSaaS.Infrastructure.Services
     public class IyzicoPaymentManager : IPaymentService
     {
         private readonly Options _options;
+        private readonly ICurrentUserService _currentUserService;
 
-        public IyzicoPaymentManager(IOptions<IyzicoSettings> settings)
+        
+        public IyzicoPaymentManager(IOptions<IyzicoSettings> settings, ICurrentUserService currentUserService)
         {
-            _options = new Options
+
+
+            _currentUserService = currentUserService;
+            _options = new Options         
             {
                 ApiKey = settings.Value.ApiKey,
                 SecretKey = settings.Value.SecretKey,
@@ -27,16 +32,17 @@ namespace MextFullstackSaaS.Infrastructure.Services
         {
             var price = userRequest.Credits * OneCreditPrice;
             var paidPrice = price;
-            var basketId = Guid.NewGuid();
+            var conversationId = Guid.NewGuid().ToString();
+            var basketId = Guid.NewGuid().ToString();
 
             CreateCheckoutFormInitializeRequest request = new CreateCheckoutFormInitializeRequest
             {
                 Locale = Locale.TR.ToString(),
-                ConversationId = "123456789",
+                ConversationId = conversationId,
                 Price = price.ToString(),
                 PaidPrice = paidPrice.ToString(),
                 Currency = Currency.TRY.ToString(),
-                BasketId = basketId.ToString(),
+                BasketId = basketId,
                 PaymentGroup = PaymentGroup.PRODUCT.ToString(),
                 CallbackUrl = CallbackUrl
             };
@@ -50,31 +56,35 @@ namespace MextFullstackSaaS.Infrastructure.Services
             enabledInstallments.Add(9);
 
             request.EnabledInstallments = enabledInstallments;
+                       
 
             Buyer buyer = new Buyer
             {
-                Id = "BY789",
-                Name = "Alper",
-                Surname = "Tunga",
-                GsmNumber = "+905350000000",
-                Email = "email@email.com",
+                Id = _currentUserService.UserId.ToString(),
+                Name = userRequest.PaymentDetail.FirstName,
+                Surname = userRequest.PaymentDetail.LastName,
+                GsmNumber = userRequest.PaymentDetail.PhoneNumber,
+                Email = userRequest.PaymentDetail.Email,
                 IdentityNumber = "74300864791",
-                LastLoginDate = "2015-10-05 12:43:35",
+                LastLoginDate = userRequest.PaymentDetail.LastLoginDate.ToString(),
                 RegistrationDate = "2013-04-21 15:12:09",
-                RegistrationAddress = "Nidakule Göztepe, Merdivenköy Mah. Bora Sok. No:1",
+                RegistrationAddress = userRequest.PaymentDetail.Address,
                 Ip = "85.34.78.112",
                 City = "Istanbul",
                 Country = "Turkey",
                 ZipCode = "34732"
             };
+
+            //UserAddress
+
             request.Buyer = buyer;
 
             Address billingAddress = new Address
             {
-                ContactName = "Jane Doe",
+                ContactName = $"{userRequest.PaymentDetail.FirstName} {userRequest.PaymentDetail.LastName}",
                 City = "Istanbul",
                 Country = "Turkey",
-                Description = "Nidakule Göztepe, Merdivenköy Mah. Bora Sok. No:1",
+                Description = userRequest.PaymentDetail.Address,
                 ZipCode = "34742"
             };
             request.BillingAddress = billingAddress;
@@ -84,9 +94,9 @@ namespace MextFullstackSaaS.Infrastructure.Services
             BasketItem firstBasketItem = new BasketItem
             {
                 Id = "BI101",
-                Name = "IconBuilderAI 10 credits",
+                Name = $"IconBuilderAI {userRequest.Credits} credits",
                 ItemType = BasketItemType.VIRTUAL.ToString(),
-                Price = "100",
+                Price = paidPrice.ToString(),
                 Category1 = "Credits"
             };
             basketItems.Add(firstBasketItem);
@@ -94,6 +104,8 @@ namespace MextFullstackSaaS.Infrastructure.Services
             request.BasketItems = basketItems;
 
             CheckoutFormInitialize checkoutFormInitialize = CheckoutFormInitialize.Create(request, _options);
+
+            checkoutFormInitialize.
 
             return checkoutFormInitialize;
         }
