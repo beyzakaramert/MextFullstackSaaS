@@ -17,8 +17,7 @@ namespace MextFullstackSaaS.Domain.Entities
         public string Token { get; set;}
         public string Price { get; set; }
         public string PaidPrice { get; set; }
-        public CurrencyCode CurrencyCode { get; set; }
-        public string Ip { get; set; }
+        public CurrencyCode CurrencyCode { get; set; }       
         public PaymentStatus Status { get; set; }
         public Guid UserId { get; set; }
         public User User { get; set; }
