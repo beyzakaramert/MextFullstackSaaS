@@ -14,5 +14,7 @@ namespace MextFullstackSaaS.Domain.Entities
         public string BasketId { get; set; }
 
         public string Token { get; set;}
+
+        public string Price { get; set; }
     }
 }
