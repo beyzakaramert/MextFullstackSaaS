@@ -5,6 +5,6 @@ namespace MextFullstackSaaS.Application.Common.Interfaces
     public  interface IPaymentService
     {
         PaymentsCreateCheckoutFormResponse CreateCheckoutForm(PaymentsCreateCheckoutFormRequest userRequest);
-        object CheckPaymentByToken(string token);
+        PaymentsCheckPaymentByTokenResponse CheckPaymentByToken(string token);
     }
 }

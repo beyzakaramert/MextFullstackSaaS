@@ -110,7 +110,7 @@ namespace MextFullstackSaaS.Infrastructure.Services
             return MapCheckoutFormInitializeResponse(checkoutFormInitialize,price,paidPrice,conversationId,basketId);
         }
 
-        public object CheckPaymentByToken(string token)
+        public PaymentsCheckPaymentByTokenResponse CheckPaymentByToken(string token)
         {
             var conversationId = Guid.NewGuid().ToString();
 
@@ -123,8 +123,17 @@ namespace MextFullstackSaaS.Infrastructure.Services
 
             CheckoutForm checkoutForm = CheckoutForm.Retrieve(request, _options);
 
-        }
+            return new PaymentsCheckPaymentByTokenResponse()
+            {
+                ConversationId = conversationId,
+                IsSuccess = checkoutForm.PaymentStatus.ToLowerInvariant() == "success",
+                PaymentStatus = checkoutForm.PaymentStatus,
+                ErrorCode = checkoutForm.ErrorCode,
+                ErrorGroup = checkoutForm.ErrorGroup,
+                ErrorMessage = checkoutForm.ErrorMessage
+            };
 
+        }
         private PaymentsCreateCheckoutFormResponse MapCheckoutFormInitializeResponse(CheckoutFormInitialize checkoutFormInitialize, decimal price, decimal paidPrice, string conversationId, string basketId)
         {
             return new PaymentsCreateCheckoutFormResponse
