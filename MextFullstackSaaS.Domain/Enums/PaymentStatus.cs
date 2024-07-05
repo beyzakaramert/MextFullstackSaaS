@@ -14,6 +14,5 @@ namespace MextFullstackSaaS.Domain.Enums
         Failed =4,
         Canceled =5,
         Refunded =6,
-
     }
 }
